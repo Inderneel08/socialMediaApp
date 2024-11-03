@@ -30,7 +30,7 @@ public class EmailService {
 
             helper.setSubject(subject);
 
-            helper.setText(text);
+            helper.setText(text,true);
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {

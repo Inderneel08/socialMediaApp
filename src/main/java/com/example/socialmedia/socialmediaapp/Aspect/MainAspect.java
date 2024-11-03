@@ -52,12 +52,13 @@ public class MainAspect {
 
         String subject = "Confirm your email registered to mySocial";
 
-        String text = "Please confirm your email address by clicking the link below:\n\n" +
-                "<a href=\"" + appUrl + "\">Confirm Email</a>\n\n" +
-                "If the link doesn't work, copy and paste the following URL into your browser:\n" +
-                appUrl;
+        String emailContent = "<p>Thank you for registering! Please confirm your email by clicking the link below:</p>";
+        emailContent += "<p><a href=\"" + appUrl + "\">Confirm Email</a></p>";
+        emailContent += "<p>If the link doesn't work, copy and paste the following URL into your browser:</p>";
+        emailContent += "<p>" + appUrl + "</p>"; // You can remove this line if you don't want to show the raw
+                                                 // URL
 
-        emailService.sendConfirmationEmail(signUpRequest.getEmail(), subject, text);
+        emailService.sendConfirmationEmail(signUpRequest.getEmail(), subject, emailContent);
     }
 
 }

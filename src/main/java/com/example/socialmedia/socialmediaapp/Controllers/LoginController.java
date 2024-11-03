@@ -34,11 +34,7 @@ public class LoginController {
     public ModelAndView doSignUp(@ModelAttribute SignUpRequest signUpRequest, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
 
-        ModelAndView modelAndView = new ModelAndView("signup");
-
-        SignUpRequest newSignUpRequest = new SignUpRequest();
-
-        modelAndView.addObject("signupRequest", newSignUpRequest);
+        ModelAndView modelAndView = new ModelAndView("redirect:/signup");
 
         if (userServices.isEmailRegistered(signUpRequest.getEmail())) {
             redirectAttributes.addFlashAttribute("errorMessage", "Email already registered!");

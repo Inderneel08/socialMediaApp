@@ -170,32 +170,32 @@
     </script>
 
 <!-- Success Alert -->
-<div th:if="${successMessage}">
+<!-- <div th:if="${successMessage}"> -->
     <script>
         Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: [[${successMessage}]],
+            text: /*[[${successMessage}]]*/,
             confirmButtonText: 'OK'
         }).then(() => {
             location.reload();
         });
     </script>
-</div>
+<!-- </div> -->
 
 <!-- Error Alert -->
-<div th:if="${errorMessage}">
+<!-- <div th:if="${errorMessage}"> -->
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Error',
-			text: [[${errorMessage}]],
+			text: /*[[${errorMessage}]]*/,
             confirmButtonText: 'OK'
         }).then(() => {
             location.reload();
         });
     </script>
-</div>
+<!-- </div> -->
 
 
 </body>
