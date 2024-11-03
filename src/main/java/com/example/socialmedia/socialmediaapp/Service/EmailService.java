@@ -2,9 +2,12 @@ package com.example.socialmedia.socialmediaapp.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
@@ -16,17 +19,23 @@ public class EmailService {
     private String sender;
 
     public void sendConfirmationEmail(String to, String subject, String text) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-        simpleMailMessage.setFrom(sender);
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-        simpleMailMessage.setTo(to);
+            helper.setFrom(sender);
 
-        simpleMailMessage.setSubject(subject);
+            helper.setTo(to);
 
-        simpleMailMessage.setText(text);
+            helper.setSubject(subject);
 
-        javaMailSender.send(simpleMailMessage);
+            helper.setText(text);
+
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 }
