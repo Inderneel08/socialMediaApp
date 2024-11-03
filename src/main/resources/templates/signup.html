@@ -37,38 +37,38 @@
 	<div class="limiter">
         <div class="container-login100" th:style="|background-image: url('@{/images/bg-01.jpg}')|">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form" id="mySignUpform" method="POST" action="@{/do-signup}">
+				<form class="login100-form validate-form" id="mySignUpform" method="POST" th:action="@{/do-signup}" th:object="${signupRequest}">
                     <span class="login100-form-title p-b-49">
 						Sign Up
 					</span>
 
                     <div class="wrap-input100 validate-input m-b-23" data-validate = "First Name is required">
 						<span class="label-input100">First Name</span>
-						<input class="input100" type="text" name="first_name" placeholder="Type your First Name">
+						<input class="input100" type="text" name="first_name" th:field="*{firstName}" placeholder="Type your First Name">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
                     <div class="wrap-input100 validate-input m-b-23" data-validate = "Last Name is required">
 						<span class="label-input100">Last Name</span>
-						<input class="input100" type="text" name="last_name" placeholder="Type your Last Name">
+						<input class="input100" type="text" name="last_name" th:field="*{lastName}" placeholder="Type your Last Name">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Email is required">
 						<span class="label-input100">Email</span>
-						<input class="input100" type="text" name="email" placeholder="Type your Email">
+						<input class="input100" type="text" name="email" th:field="*{email}" placeholder="Type your Email">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Password is required">
 						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="password" id="password" placeholder="Type your password">
+						<input class="input100" type="password" name="password" th:field="*{password}" id="password" placeholder="Type your password">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 
                     <div class="wrap-input100 validate-input" data-validate="Confirm Password is required">
 						<span class="label-input100">Confirm Password</span>
-						<input class="input100" type="password" name="confirm_password" id="confirm_password" placeholder="Type your password">
+						<input class="input100" type="password" name="confirm_password" th:field="*{confirmPassword}" id="confirm_password" placeholder="Type your password">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 

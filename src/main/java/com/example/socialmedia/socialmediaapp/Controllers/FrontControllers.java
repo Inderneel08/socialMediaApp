@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
+
 @Controller
 public class FrontControllers {
 
@@ -21,9 +23,9 @@ public class FrontControllers {
     public ModelAndView signup() {
         ModelAndView modelAndView = new ModelAndView("signup");
 
-        // Users users = new Users();
+        SignUpRequest signUpRequest = new SignUpRequest();
 
-        // modelAndView.addObject("users", users);
+        modelAndView.addObject("signupRequest", signUpRequest);
 
         return (modelAndView);
     }

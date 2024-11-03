@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
+import com.example.socialmedia.socialmediaapp.Service.EmailService;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +24,9 @@ public class MainAspect {
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private EmailService emailService;
 
     @Before("@annotation(com.example.socialmedia.socialmediaapp.Aspect.ExtractEmail) && args(signUpRequest,..)")
     public void extractedEmail(JoinPoint joinPoint, SignUpRequest signUpRequest) {
@@ -45,6 +49,15 @@ public class MainAspect {
         String urlHash = userServices.doHash(emailVerificationHash + hashString);
 
         String appUrl = appBaseurl + "validate/" + encodedEmail + "/" + urlHash;
+
+        String subject = "Confirm your email registered to mySocial";
+
+        String text = "Please confirm your email address by clicking the link below:\n\n" +
+                "<a href=\"" + appUrl + "\">Confirm Email</a>\n\n" +
+                "If the link doesn't work, copy and paste the following URL into your browser:\n" +
+                appUrl;
+
+        emailService.sendConfirmationEmail(signUpRequest.getEmail(), subject, text);
     }
 
 }

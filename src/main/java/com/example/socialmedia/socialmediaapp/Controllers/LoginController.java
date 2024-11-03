@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.socialmedia.socialmediaapp.Aspect.ExtractEmail;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
+import com.example.socialmedia.socialmediaapp.Service.GetClientIP;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,9 @@ public class LoginController {
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private GetClientIP getClientIP;
 
     @PostMapping("/do-login")
     public void doLogin() {
@@ -31,7 +35,7 @@ public class LoginController {
     public ModelAndView doSignUp(@ModelAttribute SignUpRequest signUpRequest, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
 
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView = new ModelAndView("signup");
 
         if (userServices.isEmailRegistered(signUpRequest.getEmail())) {
             redirectAttributes.addFlashAttribute("error", "Email is already registered.");
@@ -39,9 +43,11 @@ public class LoginController {
             return (modelAndView);
         }
 
-        String ip_address = request.getRemoteAddr();
+        String ip_address = getClientIP.getClientIp(request);
 
         userServices.createUserServices(signUpRequest, ip_address,request);
+
+        redirectAttributes.addFlashAttribute("success", "Email registered successfully!");
 
         return (modelAndView);
     }

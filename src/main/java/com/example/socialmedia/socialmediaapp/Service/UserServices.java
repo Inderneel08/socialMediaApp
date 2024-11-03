@@ -8,6 +8,7 @@ import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.socialmedia.socialmediaapp.Aspect.SendEmail;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
@@ -37,6 +38,7 @@ public class UserServices {
         }
     }
 
+    @SendEmail
     public void createUserServices(SignUpRequest signUpRequest, String ip_address, HttpServletRequest request) {
 
         Users users = new Users();
