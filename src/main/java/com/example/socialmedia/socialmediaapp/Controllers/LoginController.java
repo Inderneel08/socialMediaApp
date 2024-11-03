@@ -1,6 +1,5 @@
 package com.example.socialmedia.socialmediaapp.Controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,16 +41,16 @@ public class LoginController {
         modelAndView.addObject("signupRequest", newSignUpRequest);
 
         if (userServices.isEmailRegistered(signUpRequest.getEmail())) {
-            redirectAttributes.addFlashAttribute("error", "Email is already registered.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Email already registered!");
 
             return (modelAndView);
         }
 
         String ip_address = getClientIP.getClientIp(request);
 
-        userServices.createUserServices(signUpRequest, ip_address,request);
+        userServices.createUserServices(signUpRequest, ip_address, request);
 
-        redirectAttributes.addFlashAttribute("success", "Email registered successfully!");
+        redirectAttributes.addFlashAttribute("successMessage", "Email registered successfully!");
 
         return (modelAndView);
     }

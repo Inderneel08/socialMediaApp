@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 
     <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.ico}"/>
@@ -170,12 +170,12 @@
     </script>
 
 <!-- Success Alert -->
-<div th:if="${session.success}">
+<div th:if="${successMessage}">
     <script>
         Swal.fire({
             icon: 'success',
             title: 'Success',
-            // text: /*[[${session.success}]]*/,
+            text: [[${successMessage}]],
             confirmButtonText: 'OK'
         }).then(() => {
             location.reload();
@@ -184,12 +184,12 @@
 </div>
 
 <!-- Error Alert -->
-<div th:if="${session.error}">
+<div th:if="${errorMessage}">
     <script>
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            // text: /*[[${session.error}]]*/,
+			text: [[${errorMessage}]],
             confirmButtonText: 'OK'
         }).then(() => {
             location.reload();
