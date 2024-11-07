@@ -37,7 +37,10 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView("redirect:/signup");
 
         if (userServices.isEmailRegistered(signUpRequest.getEmail())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Email already registered!");
+            // redirectAttributes.addFlashAttribute("errorMessage", "Email already
+            // registered!");
+
+            request.getSession().setAttribute("errorMessage", "Email already registered!");
 
             return (modelAndView);
         }
@@ -46,7 +49,10 @@ public class LoginController {
 
         userServices.createUserServices(signUpRequest, ip_address, request);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Email registered successfully!");
+        // redirectAttributes.addFlashAttribute("successMessage", "Email registered
+        // successfully!");
+
+        request.getSession().setAttribute("successMessage", "Email registered successfully!");
 
         return (modelAndView);
     }

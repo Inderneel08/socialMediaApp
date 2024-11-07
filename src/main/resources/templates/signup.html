@@ -169,33 +169,53 @@
         });
     </script>
 
-<!-- Success Alert -->
-<!-- <div th:if="${successMessage}"> -->
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: /*[[${successMessage}]]*/,
-            confirmButtonText: 'OK'
-        }).then(() => {
-            location.reload();
-        });
-    </script>
-<!-- </div> -->
 
-<!-- Error Alert -->
-<!-- <div th:if="${errorMessage}"> -->
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-			text: /*[[${errorMessage}]]*/,
-            confirmButtonText: 'OK'
-        }).then(() => {
-            location.reload();
-        });
-    </script>
-<!-- </div> -->
+<script>
+	let successMessage = /*[[${session.successMessage}]]*/ null;
+	let errorMessage = /*[[${session.errorMessage}]]*/ null;
+
+	console.log(successMessage);
+
+	console.log(errorMessage);
+
+	if (successMessage) {
+		sessionStorage.setItem("successMessage", successMessage);
+	}
+
+	if (errorMessage) {
+		sessionStorage.setItem("errorMessage", errorMessage);
+	}
+</script>
+
+<script>
+	const successMessages = sessionStorage.getItem("successMessage");
+
+	const errorMessages = sessionStorage.getItem("errorMessage");
+
+	if(successMessages){
+		Swal.fire({
+			icon: 'success',
+			title: 'Success',
+			text: successMessage,
+			confirmButtonText: 'OK'
+		}).then(() => {
+			sessionStorage.removeItem("successMessage");
+		});
+	}
+
+	if(errorMessages){
+		Swal.fire({
+			icon: 'success',
+			title: 'Success',
+			text: successMessage,
+			confirmButtonText: 'OK'
+		}).then(() => {
+			sessionStorage.removeItem("errorMessage");
+		});
+	}
+
+</script>
+
 
 
 </body>
