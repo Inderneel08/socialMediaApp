@@ -171,52 +171,37 @@
 
 
 <script>
-	let successMessage = /*[[${session.successMessage}]]*/ null;
-	let errorMessage = /*[[${session.errorMessage}]]*/ null;
 
-	console.log(successMessage);
+    let successMessage = "[[${session.successMessage}]]";
+    let errorMessage = "[[${session.errorMessage}]]";
 
-	console.log(errorMessage);
+	// let successMessage = sessionStorage.getItem("successMessage");
+	// let errorMessage = sessionStorage.getItem("errorMessage");
+
 
 	if (successMessage) {
-		sessionStorage.setItem("successMessage", successMessage);
+		Swal.fire({
+			icon: 'success',
+			title: 'Success',
+			text: successMessage,
+			confirmButtonText: 'OK'
+		}).then(() => {
+			window.location.href = '/signup';
+		});
 	}
 
 	if (errorMessage) {
-		sessionStorage.setItem("errorMessage", errorMessage);
-	}
-</script>
-
-<script>
-	const successMessages = sessionStorage.getItem("successMessage");
-
-	const errorMessages = sessionStorage.getItem("errorMessage");
-
-	if(successMessages){
 		Swal.fire({
-			icon: 'success',
-			title: 'Success',
-			text: successMessage,
+			icon: 'error',
+			title: 'Error',
+			text: errorMessage,
 			confirmButtonText: 'OK'
 		}).then(() => {
-			sessionStorage.removeItem("successMessage");
-		});
-	}
-
-	if(errorMessages){
-		Swal.fire({
-			icon: 'success',
-			title: 'Success',
-			text: successMessage,
-			confirmButtonText: 'OK'
-		}).then(() => {
-			sessionStorage.removeItem("errorMessage");
+			window.location.href = '/signup';
 		});
 	}
 
 </script>
-
-
 
 </body>
 </html>

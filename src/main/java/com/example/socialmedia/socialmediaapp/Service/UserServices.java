@@ -71,4 +71,13 @@ public class UserServices {
         return (true);
     }
 
+    public boolean findEmailHashExists(String emailHash)
+    {
+        if(userRepository.findByEmailHash(emailHash)==null){
+            return(false);
+        }
+
+        return(true);
+    }
+
 }

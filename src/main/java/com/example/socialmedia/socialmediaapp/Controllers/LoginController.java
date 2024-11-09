@@ -2,6 +2,8 @@ package com.example.socialmedia.socialmediaapp.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +36,10 @@ public class LoginController {
     public ModelAndView doSignUp(@ModelAttribute SignUpRequest signUpRequest, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
 
-        ModelAndView modelAndView = new ModelAndView("redirect:/signup");
+        ModelAndView modelAndView = new ModelAndView("redirect:/signup?redirected=true");
 
         if (userServices.isEmailRegistered(signUpRequest.getEmail())) {
-            // redirectAttributes.addFlashAttribute("errorMessage", "Email already
-            // registered!");
+            // modelAndView.addObject("errorMessage", "Email already registered!");
 
             request.getSession().setAttribute("errorMessage", "Email already registered!");
 
@@ -49,17 +50,20 @@ public class LoginController {
 
         userServices.createUserServices(signUpRequest, ip_address, request);
 
-        // redirectAttributes.addFlashAttribute("successMessage", "Email registered
-        // successfully!");
+        // modelAndView.addObject("successMessage", "Email registered successfully!");
 
         request.getSession().setAttribute("successMessage", "Email registered successfully!");
 
         return (modelAndView);
     }
 
-    @PostMapping("/validate/{encodedEmail}/{hashGenerated}")
-    public void validateEmail(@PathVariable String encodedEmail, @PathVariable String hashGenerated) {
+    @GetMapping("/validate/{encodedEmail}/{hashGenerated}")
+    public ModelAndView validateEmail(@PathVariable String encodedEmail, @PathVariable String hashGenerated) {
+        ModelAndView modelAndView = new ModelAndView("confirmation");
 
+        
+
+        return (modelAndView);
     }
 
 }
