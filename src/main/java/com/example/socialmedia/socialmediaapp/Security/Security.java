@@ -17,7 +17,7 @@ public class Security {
                         "/fonts/**")
                 .permitAll()
                 .and().authorizeHttpRequests()
-                .requestMatchers("/", "/login", "/signup", "/do-signup","/validate/**").anonymous();
+                .requestMatchers("/", "/login", "/signup", "/do-signup","/validate/**","/do-login").anonymous();
 
         return (http.build());
     }

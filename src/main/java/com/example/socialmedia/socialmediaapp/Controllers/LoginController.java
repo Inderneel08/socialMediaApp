@@ -11,7 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.socialmedia.socialmediaapp.Aspect.ExtractEmail;
+import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
+import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Service.GetClientIP;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
@@ -27,8 +29,8 @@ public class LoginController {
     private GetClientIP getClientIP;
 
     @PostMapping("/do-login")
-    public void doLogin() {
-
+    public void doLogin(@ModelAttribute LoginRequest loginRequest) {
+        
     }
 
     @PostMapping("/do-signup")
@@ -61,7 +63,38 @@ public class LoginController {
     public ModelAndView validateEmail(@PathVariable String encodedEmail, @PathVariable String hashGenerated) {
         ModelAndView modelAndView = new ModelAndView("confirmation");
 
-        
+        String decodedEmail = userServices.decodeEmail(encodedEmail);
+
+        // System.out.println(decodedEmail);
+
+        Users users = userServices.findEmailExists(decodedEmail);
+
+        String hashString = "A#197012";
+
+        // System.out.println(userServices.doHash(users.getEmail_verificationHash() +
+        // hashString));
+
+        // System.out.println(actualHash);
+
+        // System.out.println();
+
+        // System.out.println(userServices.doHash(users.getEmail()));
+
+        if (users == null) {
+            modelAndView.addObject("value", "Email confirmation failed!");
+        } else {
+            String actualHash = userServices.doHash(users.getEmail_verificationHash() + hashString);
+            if (actualHash.equals(hashGenerated)) {
+                if (users.getIs_verified() == 1) {
+                    modelAndView.addObject("value", "Email already verified!");
+                } else {
+                    userServices.updateVerificationStatus(decodedEmail);
+                    modelAndView.addObject("value", "Email confirmation successful!");
+                }
+            } else {
+                modelAndView.addObject("value", "Email confirmation failed!");
+            }
+        }
 
         return (modelAndView);
     }

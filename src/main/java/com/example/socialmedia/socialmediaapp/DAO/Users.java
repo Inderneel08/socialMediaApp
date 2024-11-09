@@ -40,7 +40,6 @@ public class Users {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp created_at;
 
-
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
@@ -51,4 +50,6 @@ public class Users {
     @Column(name = "email_verificationHash")
     private String email_verificationHash;
 
+    @Column(name = "role")
+    private int role;
 }

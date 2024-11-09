@@ -14,6 +14,7 @@ import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServices {
@@ -57,6 +58,8 @@ public class UserServices {
 
         users.setEmail_verificationHash(emailVerificationHash);
 
+        users.setRole(0);
+
         userRepository.save(users);
     }
 
@@ -71,13 +74,21 @@ public class UserServices {
         return (true);
     }
 
-    public boolean findEmailHashExists(String emailHash)
-    {
-        if(userRepository.findByEmailHash(emailHash)==null){
-            return(false);
-        }
+    public String decodeEmail(String encodedEmail) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedEmail);
 
-        return(true);
+        String decodedEmail = new String(decodedBytes);
+
+        return (decodedEmail);
+    }
+
+    public Users findEmailExists(String email) {
+        return (userRepository.findEmail(email));
+    }
+
+    @Transactional
+    public void updateVerificationStatus(String email) {
+        userRepository.updateVerificationStatus(email);
     }
 
 }

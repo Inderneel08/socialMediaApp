@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +19,14 @@ public class FrontControllers {
     }
 
     @GetMapping("/login")
-    public String createAccount() {
-        return ("login");
+    public ModelAndView createAccount() {
+        ModelAndView modelAndView = new ModelAndView("login");
+
+        LoginRequest loginRequest = new LoginRequest();
+
+        modelAndView.addObject("loginRequest", loginRequest);
+
+        return (modelAndView);
     }
 
     @GetMapping("/signup")
