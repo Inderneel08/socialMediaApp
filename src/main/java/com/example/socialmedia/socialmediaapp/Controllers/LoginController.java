@@ -18,6 +18,7 @@ import com.example.socialmedia.socialmediaapp.Service.GetClientIP;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -29,8 +30,8 @@ public class LoginController {
     private GetClientIP getClientIP;
 
     @PostMapping("/do-login")
-    public void doLogin(@ModelAttribute LoginRequest loginRequest) {
-        
+    public ModelAndView doLogin(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request) {
+
     }
 
     @PostMapping("/do-signup")

@@ -60,6 +60,10 @@ public class UserServices {
 
         users.setRole(0);
 
+        users.setDisabled(0);
+
+        users.setBlocked(0);
+
         userRepository.save(users);
     }
 

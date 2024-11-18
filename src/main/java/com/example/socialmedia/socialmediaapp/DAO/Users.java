@@ -52,4 +52,10 @@ public class Users {
 
     @Column(name = "role")
     private int role;
+
+    @Column(name = "disabled")
+    private int disabled;
+
+    @Column(name = "blocked")
+    private int blocked;
 }
