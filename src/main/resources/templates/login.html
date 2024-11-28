@@ -57,7 +57,7 @@
         <!-- {{ asset('public') }} -->
         <div class="container-login100" th:style="|background-image: url('@{/images/bg-01.jpg}')|">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form" th:action="@{/do-login}" th:object="${loginRequest}" method="post">
+				<form class="login100-form validate-form" th:action="@{/do-login}" th:object="${loginRequest}" method="post" id="loginForm">
 					<span class="login100-form-title p-b-49">
 						Login
 					</span>
@@ -68,9 +68,11 @@
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
+				    <input type="hidden" id="hashString" th:value="${session.hashString}" name="hashString">
+
 					<div class="wrap-input100 validate-input" data-validate="Password is required">
 						<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="password" th:field="*{password}" placeholder="Type your password">
+						<input class="input100" type="password" name="password" th:field="*{password}" placeholder="Type your password" id="password">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 
@@ -155,7 +157,22 @@
     <script th:src="@{/js/main.js}"></script>
 
 	<script>
+		let hashString = "[[${session.hashString}]]";
 		
+		console.log(hashString);
+	</script>
+
+	<script>
+		$('#loginForm').on('submit',function(event){
+			const password = $('#password').val();
+
+			$('#password').val(CryptoJS.SHA256(CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex)+hashString).toString(CryptoJS.enc.Hex));
+
+			// console.log($('#password').val());
+
+			// event.preventDefault();
+		});
+
 	</script>
 
 </body>

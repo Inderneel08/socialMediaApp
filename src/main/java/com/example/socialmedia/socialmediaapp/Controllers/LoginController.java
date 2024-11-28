@@ -29,10 +29,11 @@ public class LoginController {
     @Autowired
     private GetClientIP getClientIP;
 
-    @PostMapping("/do-login")
-    public ModelAndView doLogin(@ModelAttribute LoginRequest loginRequest, HttpServletRequest request) {
+    // @PostMapping("/do-login")
+    // public ModelAndView doLogin(@ModelAttribute LoginRequest loginRequest,
+    // HttpServletRequest request) {
 
-    }
+    // }
 
     @PostMapping("/do-signup")
     @ExtractEmail

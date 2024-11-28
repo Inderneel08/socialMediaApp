@@ -1,8 +1,10 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
@@ -11,49 +13,51 @@ public class CustomUserDetails implements UserDetails {
 
     private String password;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private int role;
 
-    public CustomUserDetails(String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.email=email;
+    public CustomUserDetails(String email, String password, int role) {
+        this.email = email;
 
-        this.password=password;
+        this.password = password;
 
-        this.authorities=authorities;
+        this.role = role;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return(this.authorities);
+        String roleName = (this.role==1) ? "ROLE_ADMIN" : "ROLE_USER";
+
+        return(List.of(new SimpleGrantedAuthority(roleName)));
     }
 
     @Override
     public String getPassword() {
-        return(this.password);
+        return (this.password);
     }
 
     @Override
     public String getUsername() {
-        return(this.email);
+        return (this.email);
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return(false);
+        return (true);
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return(false);
+        return (true);
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return(false);
+        return (true);
     }
 
     @Override
     public boolean isEnabled() {
-        return(true);
+        return (true);
     }
 
 }

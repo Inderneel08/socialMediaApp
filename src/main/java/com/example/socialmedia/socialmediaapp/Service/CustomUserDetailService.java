@@ -21,24 +21,27 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        // System.out.println("Loading user with email: " + email);
 
         Users user = userRepository.findEmail(email);
+
+        // System.out.println(user);
 
         if (user == null) {
             throw new UsernameNotFoundException("Username or Password not found");
         }
 
-        return new CustomUserDetails(user.getEmail(),user.getPassword(),authorities());
+        return new CustomUserDetails(user.getEmail(), user.getPassword(), user.getRole());
     }
 
-    public Collection<? extends GrantedAuthority> authorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
+    // public Collection<? extends GrantedAuthority> authorities() {
+    //     Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        authorities.add(new SimpleGrantedAuthority("USER"));
+    //     authorities.add(new SimpleGrantedAuthority("USER"));
 
-        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+    //     authorities.add(new SimpleGrantedAuthority("ADMIN"));
 
-        return(authorities);
-    }
+    //     return (authorities);
+    // }
 
 }
