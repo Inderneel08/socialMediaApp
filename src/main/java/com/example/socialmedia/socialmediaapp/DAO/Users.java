@@ -58,4 +58,19 @@ public class Users {
 
     @Column(name = "blocked")
     private int blocked;
+
+    @Column(name = "gender")
+    private int gender;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "profile_photo")
+    private String profile_photo;
 }

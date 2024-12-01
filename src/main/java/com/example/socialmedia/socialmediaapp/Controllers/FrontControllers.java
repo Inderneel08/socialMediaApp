@@ -43,16 +43,16 @@ public class FrontControllers {
 
         Object principal = authentication.getPrincipal();
 
-        System.out.println(principal);
-
-        if (principal instanceof UserDetails){
+        if (principal instanceof UserDetails) {
 
             CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-            System.out.println(userDetails.getFirstName()+ " " + userDetails.getLastName());
-        }
-        else{
-            
+            model.addAttribute("firstname", userDetails.getFirstName());
+
+            model.addAttribute("lastname", userDetails.getLastName());
+
+        } else {
+            return ("login");
         }
 
         return ("index");

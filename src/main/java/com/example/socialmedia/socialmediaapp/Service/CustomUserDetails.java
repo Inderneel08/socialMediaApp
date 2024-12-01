@@ -19,7 +19,18 @@ public class CustomUserDetails implements UserDetails {
 
     private int role;
 
-    public CustomUserDetails(String firstName, String lastName, String email, String password, int role) {
+    private int gender;
+
+    private String address;
+
+    private String status;
+
+    private String phone;
+
+    private String profile_photo;
+
+    public CustomUserDetails(String firstName, String lastName, String email, String password, int role, int gender,
+            String address, String status,String phone,String profile_photo) {
         this.firstName = firstName;
 
         this.lastName = lastName;
@@ -29,6 +40,16 @@ public class CustomUserDetails implements UserDetails {
         this.password = password;
 
         this.role = role;
+
+        this.gender = gender;
+
+        this.address = address;
+
+        this.status = status;
+
+        this.phone=phone;
+
+        this.profile_photo=profile_photo;
     }
 
     @Override
@@ -48,14 +69,42 @@ public class CustomUserDetails implements UserDetails {
         return (this.email);
     }
 
-    public String getFirstName()
-    {
-        return(this.firstName);
+    public String getFirstName() {
+        return (this.firstName);
     }
 
-    public String getLastName()
+    public String getLastName() {
+        return (this.lastName);
+    }
+
+    public String getGender() {
+        if (this.gender == -1) {
+            return ("LGBTQ");
+        } else if (this.gender == 0) {
+            return ("MALE");
+        }
+
+        return ("FEMALE");
+    }
+
+    public String getAddress()
     {
-        return(this.lastName);
+        return(this.address);
+    }
+
+    public String getStatus()
+    {
+        return(this.status);
+    }
+
+    public String getPhoneNumber()
+    {
+        return(this.phone);
+    }
+
+    public String getProfilePhoto()
+    {
+        return(this.profile_photo);
     }
 
     @Override
