@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Error - ' + ${error}">Error Page</title>
+</head>
+<body>
+    <h1 th:text="'Error ' + ${error}">Error</h1>
+    <p th:text="${message}">Error message goes here.</p>
+    <a th:href="${#authentication.principal != null} ? @{/home} : @{/}">Go Back to Home</a>
+</body>
+</html>

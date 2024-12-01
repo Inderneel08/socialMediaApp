@@ -4,7 +4,11 @@ const menuItems = document.querySelectorAll('.menu-item');
 // Messages 
 const messageNotification = document.querySelector('#messages-notifications');
 const messages = document.querySelector('.messages');
-const message = messages.querySelectorAll('.message');
+
+if(messages!=null){
+    const message = messages.querySelectorAll('.message');
+}
+
 const messageSearch = document.querySelector('#message-search');
 
 //Theme
@@ -47,28 +51,39 @@ menuItems.forEach(item => {
 
 //Searches messages
 const searchMessage = () => {
-    const val = messageSearch.value.toLowerCase();
-    message.forEach(user => {
-        let name = user.querySelector('h5').textContent.toLowerCase();
-        if(name.indexOf(val) != -1) {
-            user.style.display = 'flex'; 
-        } else {
-            user.style.display = 'none';
-        }
-    })
+    if(messageSearch!=null){
+        const val = messageSearch.value.toLowerCase();
+        message.forEach(user => {
+            let name = user.querySelector('h5').textContent.toLowerCase();
+            if(name.indexOf(val) != -1) {
+                user.style.display = 'flex'; 
+            } else {
+                user.style.display = 'none';
+            }
+        })
+    }
 }
 
 //Search for messages
-messageSearch.addEventListener('keyup', searchMessage);
+
+if(messageSearch!=null){
+    messageSearch.addEventListener('keyup', searchMessage);
+}
+
 
 //Highlight messages card when messages menu item is clicked
-messageNotification.addEventListener('click', () => {
-    messages.style.boxShadow = '0 0 1rem var(--color-primary)';
-    messageNotification.querySelector('.notification-count').style.display = 'none';
-    setTimeout(() => {
-        messages.style.boxShadow = 'none';
-    }, 2000);
-})
+
+if(messageNotification!=null){
+    messageNotification.addEventListener('click', () => {
+        messages.style.boxShadow = '0 0 1rem var(--color-primary)';
+        messageNotification.querySelector('.notification-count').style.display = 'none';
+        setTimeout(() => {
+            messages.style.boxShadow = 'none';
+        }, 2000);
+    })
+}
+
+
 
 // ============== THEME / DISPLAY CUSTOMIZATION ============== 
 
@@ -85,7 +100,11 @@ const closeThemeModal = (e) => {
 }
 
 themeModal.addEventListener('click', closeThemeModal);
-theme.addEventListener('click', openThemeModal);
+
+if(theme!=null){
+    theme.addEventListener('click', openThemeModal);
+}
+
 
 
 // ============== FONT SIZE ============== 

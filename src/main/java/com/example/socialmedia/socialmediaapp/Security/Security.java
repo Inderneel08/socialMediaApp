@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetailService;
 
@@ -30,17 +31,19 @@ public class Security {
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
                         "/fonts/**")
                 .permitAll()
-                .and().authorizeHttpRequests()
-                .requestMatchers("/", "/signup", "/do-signup", "/validate/**").anonymous()
-                .requestMatchers("/home").hasRole("USER")
-                .and().formLogin().loginPage("/login").loginProcessingUrl("/do-login")
+                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login").anonymous()
+                .requestMatchers("/home").hasAuthority("ROLE_USER")
+                .anyRequest().authenticated()
+                .and().formLogin().loginPage("/login")
+                .loginProcessingUrl("/do-login")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/home").permitAll()
+                .defaultSuccessUrl("/home")
                 .and().logout().logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID").permitAll();
+                .deleteCookies("JSESSIONID");
 
         http.addFilterBefore(emailCaptureFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -55,12 +58,13 @@ public class Security {
         return new CustomPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        AuthenticationManager manager = config.getAuthenticationManager();
+    // @Bean
+    // public AuthenticationManager
+    // authenticationManager(AuthenticationConfiguration config) throws Exception {
+    // AuthenticationManager manager = config.getAuthenticationManager();
 
-        return manager;
-    }
+    // return manager;
+    // }
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider()

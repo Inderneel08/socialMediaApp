@@ -27,8 +27,7 @@ public class EmailCaptureFilter extends OncePerRequestFilter {
         return currentPassword.get();
     }
 
-    public static String getHashString()
-    {
+    public static String getHashString() {
         return currentHashString.get();
     }
 

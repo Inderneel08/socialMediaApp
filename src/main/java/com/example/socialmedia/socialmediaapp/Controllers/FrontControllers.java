@@ -4,7 +4,12 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.Security.EmailCaptureFilter;
+import com.example.socialmedia.socialmediaapp.Service.CustomUserDetailService;
+import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +38,23 @@ public class FrontControllers {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object principal = authentication.getPrincipal();
+
+        System.out.println(principal);
+
+        if (principal instanceof UserDetails){
+
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
+
+            System.out.println(userDetails.getFirstName()+ " " + userDetails.getLastName());
+        }
+        else{
+            
+        }
+
         return ("index");
     }
 

@@ -17,7 +17,7 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
     @Override
     public String encode(CharSequence rawPassword) {
-        System.out.println("Inside encode...");
+        // System.out.println("Inside encode...");
 
         String email = EmailCaptureFilter.getEmail();
 
@@ -32,7 +32,7 @@ public class CustomPasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        System.out.println("Enter matches");
+        // System.out.println("Enter matches");
 
         String password = EmailCaptureFilter.getPassword();
 

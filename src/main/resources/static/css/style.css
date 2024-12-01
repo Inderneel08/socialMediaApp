@@ -779,3 +779,88 @@ MEDIA QUERIES FOR SMALL TABLETS AND MOBILE PHONES
         width: 80vw; 
     }
 }
+
+/* General dropdown container styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown button with rounded profile image */
+.dropdown-button {
+    background-color: #f8f9fa; /* Light background for button */
+    border: none; /* Remove border for cleaner design */
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-items: center; /* Ensure vertical alignment */
+    display: flex;
+}
+
+/* Profile image styling */
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Makes the image round */
+    object-fit: cover;
+    margin-right: 10px; /* Space between image and text */
+    border: 2px solid #dee2e6; /* Optional border for clarity */
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover effects for the button */
+.dropdown-button:hover {
+    background-color: #e9ecef; /* Slightly darker background on hover */
+}
+
+.dropdown-button:hover .profile-image {
+    transform: scale(1.1); /* Slightly enlarges image on hover */
+    border-color: #adb5bd; /* Darker border on hover */
+}
+
+/* Dropdown menu visibility and position */
+.dropdown-menu {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%; /* Below the button */
+    left: 0;
+    z-index: 1000;
+    min-width: 160px;
+    padding: 0.5rem 0;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Show dropdown on hover */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Dropdown menu items */
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #212529;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+li form {
+    margin: 0; /* Removes any default margins */
+    padding: 0; /* Removes any default padding */
+}
+
+li button {
+    width: 100%; /* Ensures the button spans the full width */
+    height: 100%; /* Ensures the button spans the full height of the <li> */
+    display: block; /* Ensures proper block-level behavior */
+    background-color: white;
+}
+

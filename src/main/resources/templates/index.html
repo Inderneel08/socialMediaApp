@@ -14,28 +14,61 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
     <!-- Stylesheet -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/text.css}">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav>
         <div class="container">
             <h2 class="logo">
-                mySocial
+                <a th:href="@{/}" style="text-decoration: none;color: inherit;">
+                    mySocial
+                </a>
             </h2>
             <div class="search-bar">
                 <i class="uil uil-search"></i>
                 <input type="search" placeholder="Search for creators, inspirations, and projects">
             </div>
-            <div class="create">
-                <a class="btn btn-primary" for="create-post" th:href="@{/login}">Create</a>
-                <div class="profile-photo">
-                    <img th:src="@{/images/profile-1.jpg}" alt="profile-1">
-                </div>
+
+            <div class="dropdown create d-flex justify-content-end align-items-center">
+                <!-- "Create" Button for Anonymous Users -->
+                <a class="btn btn-primary me-3" th:href="@{/login}" th:if="${#authorization.expression('isAnonymous()')}">
+                    Create
+                </a>
+
+            <div class="dropdown" th:if="${#authorization.expression('isAuthenticated()')}">
+                <button
+                    class="btn btn-secondary dropdown-toggle d-flex align-items-center dropdown-button"
+                    type="button"
+                    id="dropdownMenuButton"
+                    aria-expanded="false">
+                    <img
+                        th:src="@{/images/profile-1.jpg}"
+                        alt="Profile Photo"
+                        class="profile-image">
+            <!-- <p th:text="${#authentication.toString()}"></p> -->
+                <span th:text="${#authentication.name}"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#">View Profile</a></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="dropdown-item form-control" style="cursor: pointer; font-size: inherit; padding: 10%; border: none; background: none;">Logout</button>
+                        </form>
+                    </li>
+                    <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                </ul>
+            </div>
+
             </div>
         </div>
     </nav>
 
     <!-------------------------------- MAIN ----------------------------------->
-    <main>
+    <main th:if="${#authorization.expression('isAuthenticated()')}">
         <div class="container">
             <!----------------- LEFT -------------------->
             <div class="left">
@@ -135,7 +168,8 @@
                         <span><i class="uil uil-chart-line"></i></span>
                         <h3>Analytics</h3>
                     </a>
-                    <a class="menu-item" id="theme">
+                    <a class="menu-item" id="
+                    ">
                         <span><i class="uil uil-palette"></i></span>
                         <h3>Theme</h3>
                     </a>
@@ -666,6 +700,11 @@
         </div>
     </main>
 
+    <main th:if="${#authorization.expression('isAnonymous()')}">
+        <h1 id="auth-text" style="text-align: center;"></h1>
+    </main>
+
+
     <!----------------- THEME CUSTOMIZATION -------------------->
     <div class="customize-theme">
         <div class="card">
@@ -723,4 +762,23 @@
 
     <script th:src="@{/js/index.js}"></script>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const textElement = document.getElementById("auth-text");
+        const messages = ["Register in our social media site", "Login to your social media account"];
+        let index = 0;
+
+        function updateText() {
+            textElement.textContent = messages[index];
+            index = (index + 1) % messages.length; // Loop through the messages
+        }
+
+        if(textElement!=null){
+            updateText(); // Show the first message immediately
+            setInterval(updateText, 2000); // Update the text every 4 seconds
+        }
+    });
+</script>
+
 </html>

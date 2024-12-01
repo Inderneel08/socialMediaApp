@@ -1,11 +1,8 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,7 +28,7 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("Username or Password not found");
         }
 
-        return new CustomUserDetails(user.getEmail(), user.getPassword(), user.getRole());
+        return new CustomUserDetails(user.getFirst_name(),user.getLast_name(),user.getEmail(), user.getPassword(), user.getRole());
     }
 
     // public Collection<? extends GrantedAuthority> authorities() {
