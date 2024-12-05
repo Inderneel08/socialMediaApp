@@ -51,6 +51,12 @@ public class FrontControllers {
 
             model.addAttribute("lastname", userDetails.getLastName());
 
+            model.addAttribute("gender", userDetails.getGender());
+
+            model.addAttribute("profile_image_path", userDetails.getProfilePhoto());
+
+            // System.out.println(userDetails.getGender());
+
         } else {
             return ("login");
         }

@@ -46,10 +46,12 @@
                     type="button"
                     id="dropdownMenuButton"
                     aria-expanded="false">
-                    <img
-                        th:src="@{/images/profile-1.jpg}"
-                        alt="Profile Photo"
-                        class="profile-image">
+                    <img th:if="${profile_image_path != null}" th:src="${profile_image_path}" alt="profile-image" class="profile-image">
+
+                    <img th:if="${profile_image_path == null and gender == 'MALE'}" th:src="@{/images/man.png}" alt="profile-image" class="profile-image">
+
+                    <img th:if="${profile_image_path == null and gender == 'FEMALE'}" th:src="@{/images/female.jpg}" alt="profile-image" class="profile-image">
+                    
             <!-- <p th:text="${#authentication.toString()}"></p> -->
                 <span th:text="${firstname}"></span>
                 &nbsp;
@@ -57,12 +59,13 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" th:href="@{/view-profile}">View Profile</a></li>
+                    <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                    <li><a class="dropdown-item" style="cursor: pointer; left: 1%;">View Notifications</a></li>
                     <li>
                         <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="dropdown-item form-control" style="cursor: pointer; font-size: inherit; padding: 10%; border: none; background: none;">Logout</button>
+                            <button type="submit" class="dropdown-item form-control" style="cursor: pointer; font-size: inherit; left: 5%; border: none; background: none;">Logout</button>
                         </form>
                     </li>
-                    <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
             </div>
 
@@ -77,7 +80,11 @@
             <div class="left">
                 <a class="profile">
                     <div class="profile-photo">
-                        <img th:src="@{/images/profile-1.jpg}" alt="profile-1">
+                        <img th:if="${profile_image_path != null}" th:src="${profile_image_path}" alt="profile-image">
+
+                        <img th:if="${profile_image_path == null and gender == 'MALE'}" th:src="@{/images/man.png}" alt="profile-image">
+
+                        <img th:if="${profile_image_path == null and gender == 'FEMALE'}" th:src="@{/images/female.jpg}" alt="profile-image">
                     </div>
                     <div class="handle">
                         <h4>

@@ -1,5 +1,6 @@
 package com.example.socialmedia.socialmediaapp.DAO;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,7 +20,7 @@ import lombok.Setter;
 public class Users {
 
     @Id
-    private int id;
+    private BigInteger id;
 
     @Column(name = "first_name")
     private String first_name;

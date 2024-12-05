@@ -30,7 +30,7 @@ public class CustomUserDetails implements UserDetails {
     private String profile_photo;
 
     public CustomUserDetails(String firstName, String lastName, String email, String password, int role, int gender,
-            String address, String status,String phone,String profile_photo) {
+            String address, String status, String phone, String profile_photo) {
         this.firstName = firstName;
 
         this.lastName = lastName;
@@ -47,9 +47,9 @@ public class CustomUserDetails implements UserDetails {
 
         this.status = status;
 
-        this.phone=phone;
+        this.phone = phone;
 
-        this.profile_photo=profile_photo;
+        this.profile_photo = profile_photo;
     }
 
     @Override
@@ -87,24 +87,20 @@ public class CustomUserDetails implements UserDetails {
         return ("FEMALE");
     }
 
-    public String getAddress()
-    {
-        return(this.address);
+    public String getAddress() {
+        return (this.address);
     }
 
-    public String getStatus()
-    {
-        return(this.status);
+    public String getStatus() {
+        return (this.status);
     }
 
-    public String getPhoneNumber()
-    {
-        return(this.phone);
+    public String getPhoneNumber() {
+        return (this.phone);
     }
 
-    public String getProfilePhoto()
-    {
-        return(this.profile_photo);
+    public String getProfilePhoto() {
+        return (this.profile_photo);
     }
 
     @Override
