@@ -1,7 +1,5 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,17 +26,19 @@ public class CustomUserDetailService implements UserDetailsService {
             throw new UsernameNotFoundException("Username or Password not found");
         }
 
-        return new CustomUserDetails(user.getFirst_name(),user.getLast_name(),user.getEmail(), user.getPassword(), user.getRole(),user.getGender(),user.getAddress(),user.getStatus(),user.getPhone(),user.getProfile_photo());
+        return new CustomUserDetails(user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPassword(),
+                user.getRole(), user.getGender(), user.getAddress(), user.getStatus(), user.getPhone(),
+                user.getProfile_photo());
     }
 
     // public Collection<? extends GrantedAuthority> authorities() {
-    //     Collection<GrantedAuthority> authorities = new ArrayList<>();
+    // Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-    //     authorities.add(new SimpleGrantedAuthority("USER"));
+    // authorities.add(new SimpleGrantedAuthority("USER"));
 
-    //     authorities.add(new SimpleGrantedAuthority("ADMIN"));
+    // authorities.add(new SimpleGrantedAuthority("ADMIN"));
 
-    //     return (authorities);
+    // return (authorities);
     // }
 
 }

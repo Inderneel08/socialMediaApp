@@ -65,7 +65,13 @@ public class FrontControllers {
     }
 
     @GetMapping("/login")
-    public ModelAndView createAccount(HttpServletRequest request) {
+    public ModelAndView createAccount(@RequestParam(value = "redirected", required = false) boolean redirected,
+            HttpServletRequest request) {
+
+        if (!redirected) {
+            request.getSession().removeAttribute("errorMessage");
+        }
+
         ModelAndView modelAndView = new ModelAndView("login");
 
         LoginRequest loginRequest = new LoginRequest();

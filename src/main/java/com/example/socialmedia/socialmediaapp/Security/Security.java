@@ -32,7 +32,7 @@ public class Security {
                         "/fonts/**")
                 .permitAll()
                 .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login").anonymous()
-                .requestMatchers("/home").hasAuthority("ROLE_USER")
+                .requestMatchers("/home", "/view-profile", "/update-profile").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/do-login")

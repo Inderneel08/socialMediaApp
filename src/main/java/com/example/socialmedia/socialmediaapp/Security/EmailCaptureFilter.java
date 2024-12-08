@@ -2,8 +2,11 @@ package com.example.socialmedia.socialmediaapp.Security;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,6 +21,9 @@ public class EmailCaptureFilter extends OncePerRequestFilter {
     private static final ThreadLocal<String> currentPassword = new ThreadLocal<>();
 
     private static final ThreadLocal<String> currentHashString = new ThreadLocal<>();
+
+    @Autowired
+    private UserRepository userRepository;
 
     public static String getEmail() {
         return currentEmail.get();
@@ -62,7 +68,14 @@ public class EmailCaptureFilter extends OncePerRequestFilter {
                 currentHashString.set(hashString);
 
                 try {
-                    filterChain.doFilter(request, response);
+
+                    if (userRepository.findEmail(email).getIs_verified() == 0) {
+                        request.getSession().setAttribute("errorMessage", "Email Id Not Verified");
+
+                        response.sendRedirect("login?redirected=true");
+                    } else {
+                        filterChain.doFilter(request, response);
+                    }
                 } finally {
                     clear();
                 }

@@ -158,8 +158,6 @@
 
 	<script>
 		let hashString = "[[${session.hashString}]]";
-		
-		console.log(hashString);
 	</script>
 
 	<script>
@@ -172,6 +170,22 @@
 
 			// event.preventDefault();
 		});
+
+	</script>
+
+	<script>
+		let errorMessage = "[[${session.errorMessage}]]";
+
+		if (errorMessage) {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: errorMessage,
+				confirmButtonText: 'OK'
+			}).then(() => {
+				window.location.href = '/login';
+			});
+		}
 
 	</script>
 

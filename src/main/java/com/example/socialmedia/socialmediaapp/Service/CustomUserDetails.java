@@ -73,8 +73,16 @@ public class CustomUserDetails implements UserDetails {
         return (this.firstName);
     }
 
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
+    }
+
     public String getLastName() {
         return (this.lastName);
+    }
+
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 
     public String getGender() {
@@ -91,12 +99,21 @@ public class CustomUserDetails implements UserDetails {
         return (this.address);
     }
 
+    public void setAddress(String address) {
+        this.address=address;
+    }
+
     public String getStatus() {
         return (this.status);
     }
 
     public String getPhoneNumber() {
         return (this.phone);
+    }
+
+    public void setPhoneNumber(String phone)
+    {
+        this.phone=phone;
     }
 
     public String getProfilePhoto() {
