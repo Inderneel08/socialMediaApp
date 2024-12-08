@@ -1,10 +1,12 @@
 package com.example.socialmedia.socialmediaapp.Controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 
@@ -35,4 +37,12 @@ public class ProfileController {
 
         return ("profile");
     }
+
+
+    @PostMapping("/update-profile")
+    public ResponseEntity<?> updateProfile()
+    {
+        return null;
+    }
+
 }
