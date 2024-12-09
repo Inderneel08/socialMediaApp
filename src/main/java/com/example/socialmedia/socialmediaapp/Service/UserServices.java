@@ -3,6 +3,7 @@ package com.example.socialmedia.socialmediaapp.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,8 @@ public class UserServices {
 
         users.setBlocked(0);
 
+        users.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+
         userRepository.save(users);
     }
 
@@ -93,6 +96,12 @@ public class UserServices {
     @Transactional
     public void updateVerificationStatus(String email) {
         userRepository.updateVerificationStatus(email);
+    }
+
+    @Transactional
+    public void updateLastLogin(String email)
+    {
+        userRepository.updateLastLogin(email);
     }
 
 }

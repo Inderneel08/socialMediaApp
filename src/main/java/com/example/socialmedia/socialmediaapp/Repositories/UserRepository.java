@@ -18,11 +18,15 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     // Users findByEmailHash(@Param("emailHash") String emailHash);
 
     @Modifying
-    @Query(value = "UPDATE users set users.is_verified = 1 where users.email = :email", nativeQuery = true)
+    @Query(value = "UPDATE users set users.is_verified = 1 , users.updated_at = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
     void updateVerificationStatus(@Param("email") String email);
 
     @Modifying
-    @Query(value = "UPDATE users set users.first_name = :firstname, users.last_name = :lastname, users.phone = :phone, users.address = :address where users.email = :email", nativeQuery = true)
+    @Query(value = "UPDATE users set users.first_name = :firstname, users.last_name = :lastname, users.phone = :phone, users.address = :address, users.updated_at = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
     void updateProfile(@Param("firstname") String firstname, @Param("lastname") String lastname,
             @Param("phone") String phone, @Param("address") String address, @Param("email") String email);
+
+    @Modifying
+    @Query(value = "UPDATE users set users.last_login = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
+    void updateLastLogin(@Param("email") String email);
 }

@@ -44,9 +44,11 @@ public class Users {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp created_at;
 
-    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
+
+    @Column(name = "last_login")
+    private Timestamp last_login;
 
     @Column(name = "is_verified")
     private int is_verified;

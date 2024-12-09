@@ -14,8 +14,10 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    @Autowired
+    private UserServices userServices;
+
+    @Override public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // System.out.println("Loading user with email: " + email);
 
         Users user = userRepository.findEmail(email);
@@ -25,6 +27,8 @@ public class CustomUserDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username or Password not found");
         }
+
+        userServices.updateLastLogin(email);
 
         return new CustomUserDetails(user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPassword(),
                 user.getRole(), user.getGender(), user.getAddress(), user.getStatus(), user.getPhone(),
