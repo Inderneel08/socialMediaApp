@@ -202,12 +202,14 @@
                     <div class="profile-photo">
                         <img th:src="@{/images/profile-1.jpg}" alt="profile-1">
                     </div>
-                    <input type="text" placeholder="What's on your mind, Diana ?" id="create-post">
+
+                    <input type="text" th:placeholder="|What's on your mind, ${firstname}?|" id="create-post">
                     <input type="submit" value="Post" class="btn btn-primary">
                 </form>
-                <!----------------- FEEDS -------------------->
-                <div class="feeds">
-                    <!----------------- FEED 1 -------------------->
+
+                <div class="feeds"></div>
+
+                <!-- <div class="feeds">
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -255,9 +257,7 @@
                             View all 277 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 1 -------------------->
 
-                    <!----------------- FEED 2 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -305,9 +305,7 @@
                             View all 100 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 2 -------------------->
 
-                    <!----------------- FEED 3 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -355,9 +353,7 @@
                             View all 50 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 3 -------------------->
 
-                    <!----------------- FEED 4 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -405,9 +401,7 @@
                             View all 540 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 4 -------------------->
 
-                    <!----------------- FEED 5 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -455,9 +449,7 @@
                             View all 199 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 5 -------------------->
 
-                    <!----------------- FEED 6 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -505,9 +497,7 @@
                             View all 277 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 6 -------------------->
 
-                    <!----------------- FEED 7 -------------------->
                     <div class="feed">
                         <div class="head">
                             <div class="user">
@@ -555,9 +545,8 @@
                             View all 277 comments
                         </div>
                     </div>
-                    <!----------------- END OF FEED 7 -------------------->
-                </div>
-                <!----------------- END OF FEEDS -------------------->
+                </div> -->
+
             </div>
              <!----------------- END OF MIDDLE -------------------->
 
@@ -569,18 +558,18 @@
                         <h4>Messages</h4>
                         <i class="uil uil-edit"></i>
                     </div>
-                    <!------- SEARCH BAR ------->
+
                     <div class="search-bar">
                         <i class="uil uil-search"></i>
                         <input type="search" placeholder="Search messages" id="message-search">
                     </div>
-                    <!------- MESSAGES CATEGORY ------->
+
                     <div class="category">
                         <h6 class="active">Primary</h6>
                         <h6>General</h6>
                         <h6 class="message-requests">Requests (7)</h6>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-17.jpg}" alt="profile-17">
@@ -590,7 +579,7 @@
                             <p class="text-muted">Just woke up bruh</p>
                         </div>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-6.jpg}" alt="profile-6">
@@ -600,7 +589,7 @@
                             <p class="text-bold">2 new messages</p>
                         </div>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-8.jpg}" alt="profile-8">
@@ -611,7 +600,7 @@
                             <p class="text-muted">lol u right</p>
                         </div>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-10.jpg}" alt="profile-10">
@@ -621,7 +610,7 @@
                             <p class="text-muted">Birtday Tomorrow</p>
                         </div>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-3.jpg}" alt="profile-3">
@@ -632,7 +621,7 @@
                             <p class="text-bold">5 new messages</p>
                         </div>
                     </div>
-                    <!------- MESSAGES ------->
+
                     <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-15.jpg}" alt="profile-15">
@@ -643,10 +632,12 @@
                         </div>
                     </div>
                 </div>
-                <!------- END OF MESSAGES ------->
 
-                <!------- FRIEND REQUEST ------->
                 <div class="friend-requests">
+                    <h4>Requests</h4>
+                </div>
+
+                <!-- <div class="friend-requests">
                     <h4>Requests</h4>
                     <div class="request">
                         <div class="info">
@@ -705,7 +696,8 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </div> -->
+                
             </div>
             <!----------------- END OF RIGHT -------------------->
         </div>
@@ -798,7 +790,11 @@
 
     async function fetchInitialFeeds()
     {
-        
+        const response = await fetch('/posts/initial');
+
+        const data = await response.json();
+
+        console.log(data);
     }
 
 

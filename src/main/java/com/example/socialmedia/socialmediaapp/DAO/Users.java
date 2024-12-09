@@ -44,7 +44,7 @@ public class Users {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp created_at;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private Timestamp updated_at;
 
     @Column(name = "last_login")
