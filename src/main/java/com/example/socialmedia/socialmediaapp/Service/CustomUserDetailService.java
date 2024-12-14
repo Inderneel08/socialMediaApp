@@ -30,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         userServices.updateLastLogin(email);
 
-        return new CustomUserDetails(user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPassword(),
+        return new CustomUserDetails(user.getId(),user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPassword(),
                 user.getRole(), user.getGender(), user.getAddress(), user.getStatus(), user.getPhone(),
                 user.getProfile_photo());
     }

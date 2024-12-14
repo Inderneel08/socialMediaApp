@@ -200,7 +200,7 @@
                 <!----------------- END OF STORIES -------------------->
                 <form action="" class="create-post">
                     <div class="profile-photo">
-                        <img th:src="@{/images/profile-1.jpg}" alt="profile-1">
+                        <img th:src="${profile_image_path}" alt="profile-1">
                     </div>
 
                     <input type="text" th:placeholder="|What's on your mind, ${firstname}?|" id="create-post">

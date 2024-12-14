@@ -1,5 +1,6 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
+
+    private BigInteger userId;
 
     private String firstName;
 
@@ -29,8 +32,12 @@ public class CustomUserDetails implements UserDetails {
 
     private String profile_photo;
 
-    public CustomUserDetails(String firstName, String lastName, String email, String password, int role, int gender,
+    public CustomUserDetails(BigInteger userId, String firstName, String lastName, String email, String password,
+            int role, int gender,
             String address, String status, String phone, String profile_photo) {
+
+        this.userId = userId;
+
         this.firstName = firstName;
 
         this.lastName = lastName;
@@ -100,7 +107,7 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public void setAddress(String address) {
-        this.address=address;
+        this.address = address;
     }
 
     public String getStatus() {
@@ -111,13 +118,21 @@ public class CustomUserDetails implements UserDetails {
         return (this.phone);
     }
 
-    public void setPhoneNumber(String phone)
-    {
-        this.phone=phone;
+    public void setPhoneNumber(String phone) {
+        this.phone = phone;
     }
 
     public String getProfilePhoto() {
         return (this.profile_photo);
+    }
+
+    public void setProfilePhoto(String profile_photo)
+    {
+        this.profile_photo = profile_photo;
+    }
+
+    public BigInteger getUserId() {
+        return (this.userId);
     }
 
     @Override

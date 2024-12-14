@@ -17,7 +17,11 @@ public class PostController {
 
     @GetMapping("/posts/initial")
     public List<Posts> getInitialFeeds() {
-        return(postServiceDetails.getLast24HoursPosts());
+        return (postServiceDetails.getLast24HoursPosts());
+    }
+
+    public void createPost() {
+
     }
 
 }

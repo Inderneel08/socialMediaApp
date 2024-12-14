@@ -27,9 +27,6 @@ public class Comments {
     @Column(name = "commentText")
     private String commentText;
 
-    @Column(name = "commentPic")
-    private String commentPic;
-
     @Column(name = "post_id")
     private BigInteger post_id;
 
