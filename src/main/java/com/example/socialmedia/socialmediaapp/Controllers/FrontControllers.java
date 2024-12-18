@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
+import com.example.socialmedia.socialmediaapp.DAO.MakePost;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.Security.EmailCaptureFilter;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetailService;
@@ -38,7 +39,7 @@ public class FrontControllers {
     }
 
     @GetMapping("/home")
-    public String home(Model model) {
+    public String home(Model model, @RequestParam(value = "redirected", required = false) boolean redirected,HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Object principal = authentication.getPrincipal();
@@ -47,6 +48,8 @@ public class FrontControllers {
 
             CustomUserDetails userDetails = (CustomUserDetails) principal;
 
+            MakePost postContent = new MakePost();
+
             model.addAttribute("firstname", userDetails.getFirstName());
 
             model.addAttribute("lastname", userDetails.getLastName());
@@ -54,6 +57,15 @@ public class FrontControllers {
             model.addAttribute("gender", userDetails.getGender());
 
             model.addAttribute("profile_image_path", userDetails.getProfilePhoto());
+
+            model.addAttribute("postContent", postContent);
+
+            if (!redirected) {
+                request.getSession().removeAttribute("successMessage");
+
+                request.getSession().removeAttribute("errorMessage");
+            }
+
         } else {
             return ("login");
         }
