@@ -5,21 +5,21 @@ import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
 import com.example.socialmedia.socialmediaapp.DAO.MakePost;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
+import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Security.EmailCaptureFilter;
-import com.example.socialmedia.socialmediaapp.Service.CustomUserDetailService;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
+import com.example.socialmedia.socialmediaapp.Service.LogsServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,13 +33,55 @@ public class FrontControllers {
     @Autowired
     private EmailCaptureFilter emailCaptureFilter;
 
+    @Autowired
+    private LogsServiceDetails logsServiceDetails;
+
     @GetMapping("/")
     public String hello() {
         return ("index");
     }
 
+    @GetMapping("/forgot-password")
+    public ModelAndView forgotPassword() {
+        ModelAndView modelAndView = new ModelAndView("forgot");
+
+        return (modelAndView);
+    }
+
+    @GetMapping("/showPassword/{encodedEmail}")
+    public String showPasswordResetPage(Model model, @PathVariable(value = "encodedEmail") String encodedEmail) {
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedEmail);
+
+        String decodedEmail = new String(decodedBytes);
+
+        if (userServices.findEmailExists(decodedEmail) == null) {
+            model.addAttribute("iwalp", "Some error happened!");
+
+            return ("commonError");
+        }
+
+        Users users = userServices.findEmailExists(decodedEmail);
+
+        if(logsServiceDetails.findPasswordChangeRequest(users.getId(), "Password_Change_Request") == null){
+            model.addAttribute("iwalp", "Page has expired since link opened after 30 minutes!");
+
+            return ("commonError");
+        }
+
+        if (logsServiceDetails.findPasswordChangeRequest(users.getId(), "Password_Changed") != null) {
+            model.addAttribute("iwalp", "Password cannot be changed after 30 minutes of setting it.");
+
+            return ("commonError");
+        }
+
+        model.addAttribute("encodedEmail", encodedEmail);
+
+        return ("changePassword");
+    }
+
     @GetMapping("/home")
-    public String home(Model model, @RequestParam(value = "redirected", required = false) boolean redirected,HttpServletRequest request) {
+    public String home(Model model, @RequestParam(value = "redirected", required = false) boolean redirected,
+            HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Object principal = authentication.getPrincipal();

@@ -31,8 +31,11 @@ public class Security {
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
                         "/fonts/**")
                 .permitAll()
-                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login").anonymous()
-                .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial", "/upload-profile-photo","/postComment")
+                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login",
+                        "/forgot-password","/change-password","/showPassword/**","/set-password")
+                .anonymous()
+                .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial", "/upload-profile-photo",
+                        "/postComment")
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login")

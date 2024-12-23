@@ -104,4 +104,10 @@ public class UserServices {
         userRepository.updateLastLogin(email);
     }
 
+    @Transactional
+    public void updatePassword(String email,String password)
+    {
+        userRepository.updatePassword(password, email);
+    }
+
 }

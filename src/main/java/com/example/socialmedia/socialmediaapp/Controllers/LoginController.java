@@ -1,30 +1,35 @@
 package com.example.socialmedia.socialmediaapp.Controllers;
 
+import java.util.Base64;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.example.socialmedia.socialmediaapp.Aspect.ExtractEmail;
-import com.example.socialmedia.socialmediaapp.DAO.LoginRequest;
+import com.example.socialmedia.socialmediaapp.Aspect.SendPasswordResetEmail;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Service.GetClientIP;
+import com.example.socialmedia.socialmediaapp.Service.LogsServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
-
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private LogsServiceDetails logsServiceDetails;
 
     @Autowired
     private GetClientIP getClientIP;
@@ -34,6 +39,46 @@ public class LoginController {
     // HttpServletRequest request) {
 
     // }
+
+    @PostMapping("/change-password")
+    @SendPasswordResetEmail
+    public ResponseEntity<String> changePassword(@RequestBody Map<String, String> payload, HttpServletRequest request) {
+        String email = payload.get("email");
+
+        if (!userServices.isEmailRegistered(email)) {
+            return ResponseEntity.badRequest()
+                    .body("You will get an email for changing the password if it exists in our records.");
+        }
+
+        Users users = userServices.findEmailExists(email);
+
+        logsServiceDetails.createLogs(users.getId(), "Password_Change_Request");
+
+        return ResponseEntity.ok("You will get an email for changing the password if it exists in our records.");
+    }
+
+    @PostMapping("/set-password")
+    public ResponseEntity<String> setPassword(@RequestBody Map<String, String> payload) {
+        String password = payload.get("password");
+
+        String encodedEmail = payload.get("email");
+
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedEmail);
+
+        String decodedEmail = new String(decodedBytes);
+
+        if (userServices.findEmailExists(decodedEmail) == null) {
+            return (ResponseEntity.badRequest().body("Some unexpected error happened!"));
+        }
+
+        userServices.updatePassword(decodedEmail, password);
+
+        Users users = userServices.findEmailExists(decodedEmail);
+
+        logsServiceDetails.createLogs(users.getId(), "Password_Changed");
+
+        return (ResponseEntity.ok("Password updated successfully!"));
+    }
 
     @PostMapping("/do-signup")
     @ExtractEmail
