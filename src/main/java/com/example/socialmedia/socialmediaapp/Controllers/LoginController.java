@@ -52,6 +52,16 @@ public class LoginController {
 
         Users users = userServices.findEmailExists(email);
 
+        // if(logsServiceDetails.findPasswordChangeRequest(users.getId(),"Password_Change_Request")
+        // == null){
+
+        // }
+
+        // if(logsServiceDetails.findPasswordChangeRequest(users.getId(),
+        // "Password_Changed") !=null){
+
+        // }
+
         logsServiceDetails.createLogs(users.getId(), "Password_Change_Request");
 
         return ResponseEntity.ok("You will get an email for changing the password if it exists in our records.");

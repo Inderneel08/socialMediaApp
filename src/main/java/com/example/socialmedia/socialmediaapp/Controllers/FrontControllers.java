@@ -62,7 +62,7 @@ public class FrontControllers {
 
         Users users = userServices.findEmailExists(decodedEmail);
 
-        if(logsServiceDetails.findPasswordChangeRequest(users.getId(), "Password_Change_Request") == null){
+        if (logsServiceDetails.findPasswordChangeRequest(users.getId(), "Password_Change_Request") == null) {
             model.addAttribute("iwalp", "Page has expired since link opened after 30 minutes!");
 
             return ("commonError");

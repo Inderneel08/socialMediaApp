@@ -37,7 +37,11 @@
             <div class="dropdown create d-flex justify-content-end align-items-center">
                 <!-- "Create" Button for Anonymous Users -->
                 <a class="btn btn-primary me-3" th:href="@{/login}" th:if="${#authorization.expression('isAnonymous()')}">
-                    Create
+                    Login
+                </a>
+
+                <a class="btn btn-primary me-3" th:href="@{/signup}" th:if="${#authorization.expression('isAnonymous()')}">
+                    Signup
                 </a>
 
             <div class="dropdown" th:if="${#authorization.expression('isAuthenticated()')}">
