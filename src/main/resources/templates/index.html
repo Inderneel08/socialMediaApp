@@ -20,6 +20,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 </head>
+
+<style>
+.image-upload-container {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.form-label {
+    display: block; /* Ensures it occupies its line */
+    margin-bottom: 10px; /* Adds spacing below the label */
+    font-weight: bold; /* Makes the text bold for emphasis */
+    color: #333; /* Adjust color as needed */
+}
+
+
+.global-add-button {
+    display: block;
+    margin: 0 auto 10px; /* Center the button and add spacing below */
+    width: 40px; /* Adjust size */
+    height: 40px;
+    border-radius: 50%; /* Make it a circle */
+    font-size: 20px;
+    line-height: 1.5;
+    text-align: center;
+    padding: 0;
+}
+
+.image-inputs .input-group {
+    margin-bottom: 10px;
+}
+
+.remove-image {
+    margin-left: 5px;
+}
+</style>
+
 <body>
     <!-- ${#authentication.principal != null} ? @{/home} : @{/} -->
     <nav>
@@ -101,15 +141,17 @@
 
                 <!----------------- SIDEBAR -------------------->
                 <div class="sidebar">
-                    <a class="menu-item active">
+                    <a class="menu-item active" onclick="explore(this)">
                         <span><i class="uil uil-home"></i></span>
                         <h3>Home</h3>
                     </a>
-                    <a class="menu-item">
+                    <a class="menu-item" onclick="explore(this)">
                         <span><i class="uil uil-compass"></i></span>
-                        <h3>Explore</h3>
+                        <h3>
+                            Explore
+                        </h3>
                     </a>
-                    <a class="menu-item"  id="notifications">
+                    <a class="menu-item"  id="notifications" onclick="explore(this)">
                         <span><i class="uil uil-bell"><small class="notification-count">9+</small></i></span>
                         <h3>Notification</h3>
                         <!--------------- NOTIFICATION POPUP --------------->
@@ -171,24 +213,23 @@
                         </div>
                         <!--------------- END NOTIFICATION POPUP --------------->
                     </a>
-                    <a class="menu-item" id="messages-notifications">
+                    <a class="menu-item" id="messages-notifications" onclick="explore(this)">
                         <span><i class="uil uil-envelope-alt"><small class="notification-count">6</small></i></span>
                         <h3>Messages</h3>
                     </a>
-                    <a class="menu-item">
+                    <a class="menu-item" onclick="explore(this)">
                         <span><i class="uil uil-bookmark"></i></span>
                         <h3>Bookmarks</h3>
                     </a>
-                    <a class="menu-item">
+                    <a class="menu-item" onclick="explore(this)">
                         <span><i class="uil uil-chart-line"></i></span>
                         <h3>Analytics</h3>
                     </a>
-                    <a class="menu-item" id="
-                    ">
+                    <a class="menu-item" onclick="explore(this)">
                         <span><i class="uil uil-palette"></i></span>
                         <h3>Theme</h3>
                     </a>
-                    <a class="menu-item">
+                    <a class="menu-item" onclick="explore(this)">
                         <span><i class="uil uil-setting"></i></span>
                         <h3>Setting</h3>
                     </a>
@@ -220,21 +261,24 @@
                                 <div class="modal-body">
                                     <form th:action="@{/postComment}" method="POST" id="postForm" th:object="${postContent}" enctype="multipart/form-data">
                                         <div class="mb-3">
-                                            <textarea class="form-control" id="postContent" name="postContent" rows="3" placeholder="What's on your mind?"></textarea>
+                                            <textarea class="form-control" id="postContent" name="postContent" rows="3" placeholder="What's on your mind?" required></textarea>
                                         </div>
-                                        <div id="image-upload-container" class="mb-3" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-                                            <label for="postImages" class="form-label">Attach Images</label>
-                                            <div class="input-group mb-2">
-                                                <input class="form-control" type="file" name="postImages[]" accept="image/*">
-                                                <button type="button" class="btn btn-outline-primary add-image">+</button>
-                                                <button type="button" class="btn btn-outline-danger remove-image">-</button>
+                                        <div id="image-upload-container" class="mb-3 image-upload-container">
+                                            <!-- Add Images Button -->
+                                            <label for="postImages" class="form-label">Upload Images:</label>
+
+                                            <button type="button" class="btn btn-outline-primary add-image global-add-button">+</button>
+                                            <!-- Image Inputs Container -->
+                                            <div class="image-inputs">
+                                                <div class="input-group mb-2">
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
+                                            <button type="submit" class="btn btn-primary">Post</button>
+                                        </div>
                                     </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
-                                    <button type="button" class="btn btn-primary" onclick="submitPost()">Post</button>
                                 </div>
                             </div>
                         </div>
@@ -595,16 +639,21 @@
                         <h4>Messages</h4>
                         <i class="uil uil-edit"></i>
                     </div>
+                
+                    <!-- <p th:text="'You have ' + ${#lists.size(friendRequests)} + ' friend requests.'"></p> -->
 
                     <div class="search-bar">
                         <i class="uil uil-search"></i>
                         <input type="search" placeholder="Search messages" id="message-search">
                     </div>
 
+
                     <div class="category">
                         <h6 class="active">Primary</h6>
                         <h6>General</h6>
-                        <h6 class="message-requests">Requests (7)</h6>
+                        <h6 class="message-requests" style="cursor: pointer;" id="requests_friend">
+                            Requests (<span th:text="${friendRequests}"></span>)
+                        </h6>
                     </div>
 
                     <div class="message">
@@ -802,6 +851,10 @@
 
     <script th:src="@{/js/index.js}"></script>
 </body>
+
+<script>
+    var sidebarText = 'Home';
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -1039,37 +1092,54 @@
     document.addEventListener('click', function (e) {
         const container = document.getElementById('image-upload-container');
 
-        console.log(container);
-
         if (e.target.classList.contains('add-image')) {
-            // Create a new file input group
-
             const newInputGroup = document.createElement('div');
             newInputGroup.className = 'input-group mb-2';
             newInputGroup.innerHTML = `
-                <input class="form-control" type="file" name="postImages[]" accept="image/*">
-                <button type="button" class="btn btn-outline-primary add-image">+</button>
+                <input class="form-control" type="file" name="postImages[]" accept="image/*" required>
                 <button type="button" class="btn btn-outline-danger remove-image">-</button>
             `;
             container.appendChild(newInputGroup);
-
-            // Hide the + button in the current group
-            e.target.style.display = 'none';
         }
 
         if (e.target.classList.contains('remove-image')) {
             const inputGroup = e.target.parentElement;
             const prevInputGroup = inputGroup.previousElementSibling;
-
-            // Remove the current group
             container.removeChild(inputGroup);
-
-            // Restore the + button in the previous group if it exists
-            if (prevInputGroup && prevInputGroup.querySelector('.add-image')) {
-                prevInputGroup.querySelector('.add-image').style.display = 'inline-block';
-            }
         }
     });
+</script>
+
+
+<script>
+
+    $('#requests_friend').on('click',function(){
+
+        $.ajax({
+            url:'/getFriends',
+            method: 'GET',
+            dataType: 'json',
+        });
+
+    });
+
+</script>
+
+
+<script>
+    function explore(element)
+    {
+        const activeMenu = $(element);
+
+        const activeMenuText = activeMenu.find('h3').text().trim(); // Trim text to remove extra whitespace
+
+        if(sidebarText != activeMenuText){
+            $('#feeds').empty();
+        }
+
+        sidebarText = activeMenuText;
+    }
+
 </script>
 
 </html>

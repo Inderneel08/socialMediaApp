@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.ProfileServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.UploadServiceDetails;
+import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -36,6 +37,9 @@ public class ProfileController {
 
     @Autowired
     private UploadServiceDetails uploadServiceDetails;
+
+    @Autowired
+    private UserServices userServices;
 
     @GetMapping("/view-profile")
     public String viewProfile(
@@ -146,6 +150,20 @@ public class ProfileController {
 
             return (modelAndView);
         }
+    }
+
+    @PostMapping("/changeMyPassword")
+    public ResponseEntity<?> changeMyPassword(@RequestBody Map<String, String> passwords) {
+
+        String password = passwords.get("password");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userServices.updatePassword(userDetails.getUsername(), password);
+
+        return (ResponseEntity.ok().body("Password changed successfully"));
     }
 
 }

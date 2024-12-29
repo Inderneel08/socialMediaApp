@@ -52,15 +52,16 @@ public class LoginController {
 
         Users users = userServices.findEmailExists(email);
 
-        // if(logsServiceDetails.findPasswordChangeRequest(users.getId(),"Password_Change_Request")
-        // == null){
+        if (logsServiceDetails.findPasswordChangeRequest(users.getId(), "Password_Change_Request") != null) {
+            return ResponseEntity.badRequest()
+                    .body("Password change has been requested prior.");
+        }
 
-        // }
-
-        // if(logsServiceDetails.findPasswordChangeRequest(users.getId(),
-        // "Password_Changed") !=null){
-
-        // }
+        if (logsServiceDetails.findPasswordChangeRequest(users.getId(),
+                "Password_Changed") != null) {
+            return ResponseEntity.badRequest()
+                    .body("Password change has been requested prior.");
+        }
 
         logsServiceDetails.createLogs(users.getId(), "Password_Change_Request");
 

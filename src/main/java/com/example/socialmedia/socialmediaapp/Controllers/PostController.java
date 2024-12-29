@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.socialmedia.socialmediaapp.DAO.MakePost;
@@ -39,8 +40,9 @@ public class PostController {
     @PostMapping("/postComment")
     public ModelAndView createPost(@ModelAttribute MakePost makePost, HttpServletRequest request) {
         // System.out.println(makePost.getPostContent());
+        List<MultipartFile> postImages = makePost.getPostImages();
 
-        boolean createdPost = postServiceDetails.createPost(makePost.getPostContent(), null);
+        boolean createdPost = postServiceDetails.createPost(makePost.getPostContent(), postImages);
 
         if (!createdPost) {
             ModelAndView modelAndView = new ModelAndView("redirect:/home?redirected=true");

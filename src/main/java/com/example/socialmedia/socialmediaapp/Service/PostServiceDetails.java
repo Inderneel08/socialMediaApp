@@ -2,13 +2,18 @@ package com.example.socialmedia.socialmediaapp.Service;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.socialmedia.socialmediaapp.DAO.Posts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
 import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
@@ -18,6 +23,9 @@ public class PostServiceDetails {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UploadServiceDetails uploadServiceDetails;
 
     public Page<ShowPosts> getLast24HoursPosts(Pageable pageable) {
 
@@ -50,7 +58,7 @@ public class PostServiceDetails {
         }));
     }
 
-    public boolean createPost(String post_content, List<String> media_content_path) {
+    public boolean createPost(String post_content, List<MultipartFile> postImages) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -67,11 +75,24 @@ public class PostServiceDetails {
 
         posts.setUserId(userDetails.getUserId());
 
+        String uploadDirectory = "src/main/resources/static/images/postPictures";
+
         try {
-            postRepository.save(posts);
+            Posts savedPost = postRepository.save(posts);
 
-            if (media_content_path != null && !media_content_path.isEmpty()) {
+            BigInteger postId = savedPost.getId();
 
+            if (postImages != null && !postImages.isEmpty()) {
+                for (MultipartFile file : postImages) {
+                    try {
+                        String filename = UUID.randomUUID().toString() + "_" + LocalDate.now().toString() + "_"
+                                + file.getOriginalFilename();
+
+                        uploadServiceDetails.upload(file, filename, uploadDirectory, "post-photo", postId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

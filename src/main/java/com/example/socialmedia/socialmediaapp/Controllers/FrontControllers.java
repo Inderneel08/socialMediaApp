@@ -19,6 +19,7 @@ import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Security.EmailCaptureFilter;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
+import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.LogsServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
@@ -35,6 +36,9 @@ public class FrontControllers {
 
     @Autowired
     private LogsServiceDetails logsServiceDetails;
+
+    @Autowired
+    private FriendRequestServiceLayer friendRequestServiceLayer;
 
     @GetMapping("/")
     public String hello() {
@@ -101,6 +105,9 @@ public class FrontControllers {
             model.addAttribute("profile_image_path", userDetails.getProfilePhoto());
 
             model.addAttribute("postContent", postContent);
+
+            model.addAttribute("friendRequests",
+                    friendRequestServiceLayer.getAllFriends(userDetails.getUserId()).size());
 
             if (!redirected) {
                 request.getSession().removeAttribute("successMessage");
