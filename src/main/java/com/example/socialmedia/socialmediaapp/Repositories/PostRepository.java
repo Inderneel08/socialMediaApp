@@ -29,15 +29,28 @@ public interface PostRepository extends JpaRepository<Posts, BigInteger> {
     // p.userid = :userid", nativeQuery = true)
     // Page<Object[]> findPostsFromLast24Hours(Pageable pageable);
 
-    @Query(value = "SELECT p.post_content,p.userid,p.likes,p.dislikes,p.id,p.first_name,p.last_name,p.updated_at,p.address,m.media_content_path, m.created_at "
-            +
-            "FROM ( " +
-            "  SELECT post.*, u.first_name, u.last_name, u.address " +
-            "  FROM post " +
-            "  LEFT JOIN users AS u ON post.userId = u.id " +
-            ") AS p " +
-            "LEFT JOIN media_posts AS m ON m.post_id = p.id " +
-            "WHERE p.userId = :userid", nativeQuery = true)
+    // @Query(value = "SELECT
+    // p.post_content,p.userid,p.likes,p.dislikes,p.id,p.first_name,p.last_name,p.updated_at,p.address,m.media_content_path,m.created_at
+    // FROM (SELECT post.*,u.first_name,u.last_name,u.address FROM post LEFT JOIN
+    // users as u ON post.userId = u.id) AS p LEFT JOIN media_posts AS m ON
+    // m.post_id = p.id where p.userid = :userid", nativeQuery = true)
+    // Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid,
+    // Pageable pageable);
+
+    // @Query(value = "SELECT p.post_content, p.userid, p.likes, p.dislikes, p.id,
+    // p.first_name, p.last_name, p.updated_at, p.address, m.media_content_path,
+    // m.created_at "
+    // + "FROM ( "
+    // + " SELECT post.*, u.first_name, u.last_name, u.address "
+    // + " FROM post "
+    // + " LEFT JOIN users AS u ON post.userId = u.id "
+    // + ") p "
+    // + "LEFT JOIN media_posts AS m ON m.post_id = p.id "
+    // + "WHERE p.userid = :userid", nativeQuery = true)
+    // Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid,
+    // Pageable pageable);
+
+    @Query(value = "SELECT post.post_content,post.userid,post.likes,post.dislikes,post.id,post.created_at AS created_at ,u.first_name,u.last_name,post.updated_at,u.address,m.media_content_path FROM post LEFT JOIN users AS u ON post.userId = u.id LEFT JOIN media_posts AS m ON m.post_id = post.id WHERE post.userid = :userid", nativeQuery = true)
     Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid, Pageable pageable);
 
 }

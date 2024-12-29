@@ -37,28 +37,28 @@ public class PostServiceDetails {
                 userDetails.getUserId(), pageable);
 
         // rawresults.forEach(result -> {
-        // System.out.println("Post Content: " + result[0] + " Class: " +
-        // result[0].getClass());
-        // System.out.println("User ID: " + result[1] + " Class: " +
-        // result[1].getClass());
-        // System.out.println("Likes: " + result[2] + " Class: " +
-        // result[2].getClass());
-        // System.out.println("Dislikes: " + result[3] + " Class: " +
-        // result[3].getClass());
-        // System.out.println("Post ID: " + result[4] + " Class: " +
-        // result[4].getClass());
-        // System.out.println("First Name: " + result[5] + " Class: " +
-        // result[5].getClass());
-        // System.out.println("Last Name: " + result[6] + " Class: " +
-        // result[6].getClass());
-        // System.out.println("Updated At: " + result[7] + " Class: " +
-        // result[7].getClass());
-        // System.out.println("Address: " + result[8] + " Class: " +
-        // result[8].getClass());
-        // System.out.println("Media Content Path: " + result[9] + " Class: " +
-        // result[9].getClass());
-        // System.out.println("Created At: " + result[10] + " Class: " +
-        // result[10].getClass());
+        //     System.out.println("Post Content: " + result[0] + " Class: " +
+        //             result[0].getClass());
+        //     System.out.println("User ID: " + result[1] + " Class: " +
+        //             result[1].getClass());
+        //     System.out.println("Likes: " + result[2] + " Class: " +
+        //             result[2].getClass());
+        //     System.out.println("Dislikes: " + result[3] + " Class: " +
+        //             result[3].getClass());
+        //     System.out.println("Post ID: " + result[4] + " Class: " +
+        //             result[4].getClass());
+        //     System.out.println("First Name: " + result[5] + " Class: " +
+        //             result[5].getClass());
+        //     System.out.println("Last Name: " + result[6] + " Class: " +
+        //             result[6].getClass());
+        //     System.out.println("Updated At: " + result[7] + " Class: " +
+        //             result[7].getClass());
+        //     System.out.println("Address: " + result[8] + " Class: " +
+        //             result[8].getClass());
+        //     System.out.println("Media Content Path: " + result[9] + " Class: " +
+        //             result[9].getClass());
+        //     System.out.println("Created At: " + result[10] + " Class: " +
+        //             result[10].getClass());
         // });
 
         return (rawresults.map(result -> {
@@ -74,17 +74,17 @@ public class PostServiceDetails {
 
             post.setId(BigInteger.valueOf((Long) result[4]));
 
-            post.setFirst_name((String) result[5]);
+            post.setCreated_at((Timestamp) result[5]);
 
-            post.setLast_name((String) result[6]);
+            post.setFirst_name((String) result[6]);
 
-            post.setUpdated_at((Timestamp) result[7]);
+            post.setLast_name((String) result[7]);
 
-            post.setAddress((String) result[8]);
+            post.setUpdated_at((Timestamp) result[8]);
 
-            post.setMedia_content_path((String) result[9]);
+            post.setAddress((String) result[9]);
 
-            post.setCreated_at((Timestamp) result[10]);
+            post.setMedia_content_path((String) result[10]);
 
             return (post);
         }));
