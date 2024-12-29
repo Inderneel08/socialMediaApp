@@ -29,4 +29,6 @@ public class ShowPosts {
     private String last_name;
 
     private String address;
+
+    private String media_content_path;
 }

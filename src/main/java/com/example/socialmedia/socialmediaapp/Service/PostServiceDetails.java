@@ -29,30 +29,62 @@ public class PostServiceDetails {
 
     public Page<ShowPosts> getLast24HoursPosts(Pageable pageable) {
 
-        Page<Object[]> rawresults = postRepository.findPostsFromLast24Hours(pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Page<Object[]> rawresults = postRepository.findPostsFromLast24Hours(
+                userDetails.getUserId(), pageable);
+
+        // rawresults.forEach(result -> {
+        // System.out.println("Post Content: " + result[0] + " Class: " +
+        // result[0].getClass());
+        // System.out.println("User ID: " + result[1] + " Class: " +
+        // result[1].getClass());
+        // System.out.println("Likes: " + result[2] + " Class: " +
+        // result[2].getClass());
+        // System.out.println("Dislikes: " + result[3] + " Class: " +
+        // result[3].getClass());
+        // System.out.println("Post ID: " + result[4] + " Class: " +
+        // result[4].getClass());
+        // System.out.println("First Name: " + result[5] + " Class: " +
+        // result[5].getClass());
+        // System.out.println("Last Name: " + result[6] + " Class: " +
+        // result[6].getClass());
+        // System.out.println("Updated At: " + result[7] + " Class: " +
+        // result[7].getClass());
+        // System.out.println("Address: " + result[8] + " Class: " +
+        // result[8].getClass());
+        // System.out.println("Media Content Path: " + result[9] + " Class: " +
+        // result[9].getClass());
+        // System.out.println("Created At: " + result[10] + " Class: " +
+        // result[10].getClass());
+        // });
 
         return (rawresults.map(result -> {
             ShowPosts post = new ShowPosts();
 
-            post.setId(BigInteger.valueOf((Long) result[0]));
+            post.setPost_content((String) result[0]);
 
-            post.setPost_content((String) result[1]);
+            post.setUserId(BigInteger.valueOf((Long) result[1]));
 
             post.setLikes(BigInteger.valueOf((Long) result[2]));
 
             post.setDislikes(BigInteger.valueOf((Long) result[3]));
 
-            post.setUserId(BigInteger.valueOf((Long) result[4]));
+            post.setId(BigInteger.valueOf((Long) result[4]));
 
-            post.setCreated_at((Timestamp) result[5]);
+            post.setFirst_name((String) result[5]);
 
-            post.setUpdated_at((Timestamp) result[6]);
+            post.setLast_name((String) result[6]);
 
-            post.setFirst_name((String) result[7]);
+            post.setUpdated_at((Timestamp) result[7]);
 
-            post.setLast_name((String) result[8]);
+            post.setAddress((String) result[8]);
 
-            post.setAddress((String) result[9]);
+            post.setMedia_content_path((String) result[9]);
+
+            post.setCreated_at((Timestamp) result[10]);
 
             return (post);
         }));
