@@ -18,15 +18,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.socialmedia.socialmediaapp.DAO.Likes;
 import com.example.socialmedia.socialmediaapp.DAO.Posts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
+import com.example.socialmedia.socialmediaapp.Repositories.LikeRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class PostServiceDetails {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
     @Autowired
     private UploadServiceDetails uploadServiceDetails;
@@ -138,6 +145,33 @@ public class PostServiceDetails {
 
         // return (post);
         // }));
+    }
+
+    @Transactional
+    public void likePost(BigInteger postid, BigInteger userid) {
+
+        Likes likes = likeRepository.findLikes(postid,userid);
+
+        if(likes==null){
+            likes = new Likes();
+
+            likes.setPost_id(postid);
+
+            likes.setAction(1);
+
+            likes.setUserid(userid);
+
+            likeRepository.save(likes);
+        }
+        else{
+
+            if(likes.getAction()==1){
+                likeRepository.unlikePost(postid,userid);
+            }
+            else{
+                likeRepository.likePost(postid, userid);
+            }
+        }
     }
 
     public boolean createPost(String post_content, List<MultipartFile> postImages) {

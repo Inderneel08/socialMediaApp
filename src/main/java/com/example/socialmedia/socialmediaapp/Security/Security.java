@@ -35,7 +35,7 @@ public class Security {
                         "/forgot-password","/change-password","/showPassword/**","/set-password")
                 .anonymous()
                 .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial", "/upload-profile-photo",
-                        "/postComment","/changeMyPassword","/exploreFriends")
+                        "/postComment","/changeMyPassword","/exploreFriends","/perform-like-unlike")
                 .hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/login")

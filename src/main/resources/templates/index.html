@@ -28,6 +28,13 @@
 
 <style>
 
+/* Add color to the heart's border */
+.heart-red {
+    color: red; /* This affects the stroke color */
+}
+
+
+
 .swiper {
     width: 100%; /* Ensure the swiper container takes up the full width */
     height: auto; /* Allow the height to adjust according to the content */
@@ -37,6 +44,18 @@
 .swiper-wrapper {
     display: flex; /* Ensure the slides are laid out in a row */
     width: 100%; /* Ensures the wrapper takes the full width */
+}
+
+.uil-heart{
+    cursor: pointer;
+}
+
+.uil-comment-dots{
+    cursor: pointer;
+}
+
+.uil-share-alt{
+    cursor: pointer;
 }
 
 .swiper-slide {
@@ -1009,7 +1028,7 @@
                     </div>
 
                     <div class="photo">
-                        <div class="swiper swiper-${index}">
+                        <div class="swiper swiper-${post.id}">
                             <div class="swiper-wrapper">
                                 ${post.media_content_path.map(path => `
                                     <div class="swiper-slide">
@@ -1018,16 +1037,16 @@
                                 `).join('')}
                             </div>
                             <!-- Add navigation buttons -->
-                            <div class="swiper-button-next swiper-button-next-${index}"></div>
-                            <div class="swiper-button-prev swiper-button-prev-${index}"></div>
+                            <div class="swiper-button-next swiper-button-next-${post.id}"></div>
+                            <div class="swiper-button-prev swiper-button-prev-${post.id}"></div>
                         </div>
                     </div>
 
                     <div class="action-buttons">
                         <div class="interaction-buttons">
-                            <span><i class="uil uil-heart"></i></span>
-                            <span><i class="uil uil-comment-dots"></i></span>
-                            <span><i class="uil uil-share-alt"></i></span>
+                            <span><i class="uil uil-heart" id="uil-heart-${post.id}"></i></span>
+                            <span><i class="uil uil-comment-dots" id="uil-comment-dots-${post.id}"></i></span>
+                            <span><i class="uil uil-share-alt" id="uil-share-alt-${post.id}"></i></span>
                         </div>
                         <div class="bookmark">
                             <span><i class="uil uil-bookmark-full"></i></span>
@@ -1052,14 +1071,36 @@
             `;
 
             feedsContainer.append(postElement);
-    
+
             let enableLoop = post.media_content_path.length > 1;
 
+            $(`#uil-heart-${post.id}`).on('click', function () {
+                // console.log(post);
+
+                $.ajax({
+                    url: '/perform-like-unlike', // Endpoint
+                    method: 'POST',         // HTTP method
+                    data: {id: post.id},
+                    success: function (data) {
+
+                        if(data==='Success'){
+                            console.log(1);
+
+                            $(`#uil-heart-${post.id}`).addClass('heart-red'); // Add the 'heart-red' class on click to fill the heart
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error("Failed to like the post:", error); // Handle errors
+                    }
+                });
+            });
+
             setTimeout(() => {
-                new Swiper(`.swiper-${index}`, {
+                new Swiper(`.swiper-${post.id}`, {
                     navigation: {
-                        nextEl: `.swiper-button-next-${index}`,
-                        prevEl: `.swiper-button-prev-${index}`,
+                        nextEl: `.swiper-button-next-${post.id}`,
+                        prevEl: `.swiper-button-prev-${post.id}`,
                     },
                     loop: enableLoop, // Enable loop only if multiple slides
                     slidesPerView: 1,

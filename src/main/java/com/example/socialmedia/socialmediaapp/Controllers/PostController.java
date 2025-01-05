@@ -1,5 +1,6 @@
 package com.example.socialmedia.socialmediaapp.Controllers;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.socialmedia.socialmediaapp.DAO.MakePost;
 import com.example.socialmedia.socialmediaapp.DAO.Posts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
+import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.PostServiceDetails;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +40,19 @@ public class PostController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("created_at").descending());
 
         return (postServiceDetails.getLast24HoursPosts(pageable));
+    }
+
+    @PostMapping("/perform-like-unlike")
+    public ResponseEntity<?> like_unlike_post(@RequestParam(value = "id") BigInteger id) {
+        System.out.println("Received ID as BigInteger: " + id); // Debugging
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        postServiceDetails.likePost(id,userDetails.getUserId());
+
+        return (ResponseEntity.ok("Success"));
     }
 
     @PostMapping("/postComment")
