@@ -7,6 +7,11 @@
     <title>Social Media</title>
     <!-- IconScout CDN -->
     <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.ico}"/>
+    
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
     <script th:src="@{/js/jquery.min.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -22,6 +27,26 @@
 </head>
 
 <style>
+
+.swiper {
+    width: 100%; /* Ensure the swiper container takes up the full width */
+    height: auto; /* Allow the height to adjust according to the content */
+    position: relative; /* Make sure it's positioned correctly */
+}
+
+.swiper-wrapper {
+    display: flex; /* Ensure the slides are laid out in a row */
+    width: 100%; /* Ensures the wrapper takes the full width */
+}
+
+.swiper-slide {
+    width: 100% !important; /* Each slide should take 100% of the container's width */
+    flex-shrink: 0; /* Prevent the slide from shrinking */
+    box-sizing: border-box; /* Avoid any padding issues */
+}
+
+
+
 .image-upload-container {
     max-height: 200px;
     overflow-y: auto;
@@ -854,6 +879,8 @@
 
 <script>
     var sidebarText = 'Home';
+
+    let activeMenuText = null;
 </script>
 
 <script>
@@ -967,13 +994,13 @@
         //     <img th:src="@{/images/profile-13.jpg}" alt="profile-13">
         // </div>
 
-        posts.forEach(post => {
+        posts.forEach((post,index) => {
             var postElement = `
                 <div class="feed">
                     <div class="head">
                         <div class="user">
                             <div class="info">
-                                <small>${post.address}, 15 Minutes Ago</small>
+                                <small class="post-time">${post.address}, ${timeAgo(post.created_at)}</small>
                             </div>
                         </div>
                         <span class="edit">
@@ -982,7 +1009,18 @@
                     </div>
 
                     <div class="photo">
-                        <img src="${post.media_content_path}" alt="posts">
+                        <div class="swiper swiper-${index}">
+                            <div class="swiper-wrapper">
+                                ${post.media_content_path.map(path => `
+                                    <div class="swiper-slide">
+                                        <img src="${path}" alt="post image">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <!-- Add navigation buttons -->
+                            <div class="swiper-button-next swiper-button-next-${index}"></div>
+                            <div class="swiper-button-prev swiper-button-prev-${index}"></div>
+                        </div>
                     </div>
 
                     <div class="action-buttons">
@@ -1014,7 +1052,41 @@
             `;
 
             feedsContainer.append(postElement);
+    
+            let enableLoop = post.media_content_path.length > 1;
+
+            setTimeout(() => {
+                new Swiper(`.swiper-${index}`, {
+                    navigation: {
+                        nextEl: `.swiper-button-next-${index}`,
+                        prevEl: `.swiper-button-prev-${index}`,
+                    },
+                    loop: enableLoop, // Enable loop only if multiple slides
+                    slidesPerView: 1,
+                    spaceBetween: 10,
+                });
+            }, 0); // Delay ensures DOM is updated
         });
+    }
+
+    function timeAgo(createdAt)
+    {
+        const createdDate = new Date(createdAt);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - createdDate) / 1000);
+
+        if (diffInSeconds < 60) {
+            return `${diffInSeconds} seconds ago`;
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+        } else {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `${days} day${days > 1 ? "s" : ""} ago`;
+        }
     }
 
     $(document).ready(function () {
@@ -1028,9 +1100,12 @@
             if (currentScrollTop >= previousScrollTop) {
                 if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
                     if(!isLoading){
-                        currentPage++;
 
-                        fetchPosts(currentPage);
+                        if(activeMenuText==='Home' || activeMenuText==null){
+                            currentPage++;
+
+                            fetchPosts(currentPage);
+                        }
                     }
                 }
 
@@ -1129,15 +1204,50 @@
 <script>
     function explore(element)
     {
-        const activeMenu = $(element);
+        let activeMenu = $(element);
 
-        const activeMenuText = activeMenu.find('h3').text().trim(); // Trim text to remove extra whitespace
+        activeMenuText = activeMenu.find('h3').text().trim(); // Trim text to remove extra whitespace
 
         if(sidebarText != activeMenuText){
             $('#feeds').empty();
+
+            currentPage=0;
         }
 
         sidebarText = activeMenuText;
+
+        exploreAllusers(sidebarText);
+    }
+
+
+    function exploreAllusers(activeMenuText)
+    {
+        if(activeMenuText==='Explore'){
+            $.ajax({
+                url:'/exploreFriends',
+                method: 'GET',
+                dataType: 'json',
+                data: {page: currentPage},
+                success: function (data) {
+
+                    if(data && data.size>0){
+                        console.log(data.content);
+
+                        isLoading=false;
+                    }
+                    else{
+                        console.log("No more posts to load...");
+
+                        isLoading=true;
+                    }
+                },
+                error: function (error) {
+                    console.error("Failed to fetch posts:", error); // Handle errors
+
+                    isLoading=false;
+                }
+            });
+        }
     }
 
 </script>

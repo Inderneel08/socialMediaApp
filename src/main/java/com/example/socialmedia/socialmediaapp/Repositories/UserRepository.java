@@ -2,6 +2,8 @@ package com.example.socialmedia.socialmediaapp.Repositories;
 
 import java.math.BigInteger;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,5 +38,8 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
 
     @Modifying
     @Query(value = "UPDATE users set users.password = :password where users.email = :email", nativeQuery = true)
-    void updatePassword(@Param("password") String password,@Param("email") String email);
+    void updatePassword(@Param("password") String password, @Param("email") String email);
+
+    @Query(value = "SELECT * FROM users where id != :userid", nativeQuery = true)
+    Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
 }

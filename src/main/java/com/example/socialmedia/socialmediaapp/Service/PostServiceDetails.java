@@ -3,11 +3,15 @@ package com.example.socialmedia.socialmediaapp.Service;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,57 +41,103 @@ public class PostServiceDetails {
                 userDetails.getUserId(), pageable);
 
         // rawresults.forEach(result -> {
-        //     System.out.println("Post Content: " + result[0] + " Class: " +
-        //             result[0].getClass());
-        //     System.out.println("User ID: " + result[1] + " Class: " +
-        //             result[1].getClass());
-        //     System.out.println("Likes: " + result[2] + " Class: " +
-        //             result[2].getClass());
-        //     System.out.println("Dislikes: " + result[3] + " Class: " +
-        //             result[3].getClass());
-        //     System.out.println("Post ID: " + result[4] + " Class: " +
-        //             result[4].getClass());
-        //     System.out.println("First Name: " + result[5] + " Class: " +
-        //             result[5].getClass());
-        //     System.out.println("Last Name: " + result[6] + " Class: " +
-        //             result[6].getClass());
-        //     System.out.println("Updated At: " + result[7] + " Class: " +
-        //             result[7].getClass());
-        //     System.out.println("Address: " + result[8] + " Class: " +
-        //             result[8].getClass());
-        //     System.out.println("Media Content Path: " + result[9] + " Class: " +
-        //             result[9].getClass());
-        //     System.out.println("Created At: " + result[10] + " Class: " +
-        //             result[10].getClass());
+        // System.out.println("Post Content: " + result[0] + " Class: " +
+        // result[0].getClass());
+        // System.out.println("User ID: " + result[1] + " Class: " +
+        // result[1].getClass());
+        // System.out.println("Likes: " + result[2] + " Class: " +
+        // result[2].getClass());
+        // System.out.println("Dislikes: " + result[3] + " Class: " +
+        // result[3].getClass());
+        // System.out.println("Post ID: " + result[4] + " Class: " +
+        // result[4].getClass());
+        // System.out.println("First Name: " + result[5] + " Class: " +
+        // result[5].getClass());
+        // System.out.println("Last Name: " + result[6] + " Class: " +
+        // result[6].getClass());
+        // System.out.println("Updated At: " + result[7] + " Class: " +
+        // result[7].getClass());
+        // System.out.println("Address: " + result[8] + " Class: " +
+        // result[8].getClass());
+        // System.out.println("Media Content Path: " + result[9] + " Class: " +
+        // result[9].getClass());
+        // System.out.println("Created At: " + result[10] + " Class: " +
+        // result[10].getClass());
         // });
 
-        return (rawresults.map(result -> {
-            ShowPosts post = new ShowPosts();
+        Map<BigInteger, ShowPosts> postMap = new LinkedHashMap<>();
 
-            post.setPost_content((String) result[0]);
+        for (Object[] result : rawresults) {
+            BigInteger postId = BigInteger.valueOf((Long) result[4]);
 
-            post.setUserId(BigInteger.valueOf((Long) result[1]));
+            ShowPosts post = postMap.get(postId);
 
-            post.setLikes(BigInteger.valueOf((Long) result[2]));
+            if (post == null) {
+                post = new ShowPosts();
 
-            post.setDislikes(BigInteger.valueOf((Long) result[3]));
+                post.setPost_content((String) result[0]);
 
-            post.setId(BigInteger.valueOf((Long) result[4]));
+                post.setUserId(BigInteger.valueOf((Long) result[1]));
 
-            post.setCreated_at((Timestamp) result[5]);
+                post.setLikes(BigInteger.valueOf((Long) result[2]));
 
-            post.setFirst_name((String) result[6]);
+                post.setDislikes(BigInteger.valueOf((Long) result[3]));
 
-            post.setLast_name((String) result[7]);
+                post.setId(BigInteger.valueOf((Long) result[4]));
 
-            post.setUpdated_at((Timestamp) result[8]);
+                post.setCreated_at((Timestamp) result[5]);
 
-            post.setAddress((String) result[9]);
+                post.setFirst_name((String) result[6]);
 
-            post.setMedia_content_path((String) result[10]);
+                post.setLast_name((String) result[7]);
 
-            return (post);
-        }));
+                post.setUpdated_at((Timestamp) result[8]);
+
+                post.setAddress((String) result[9]);
+
+                post.setMedia_content_path(new ArrayList<>());
+
+                postMap.put(postId, post);
+            }
+
+            String mediaPath = (String) result[10];
+
+            if (mediaPath != null) {
+                post.getMedia_content_path().add(mediaPath);
+            }
+        }
+
+        List<ShowPosts> groupedPosts = new ArrayList<>(postMap.values());
+
+        return (new PageImpl<>(groupedPosts, pageable, groupedPosts.size()));
+
+        // return (rawresults.map(result -> {
+        // ShowPosts post = new ShowPosts();
+
+        // post.setPost_content((String) result[0]);
+
+        // post.setUserId(BigInteger.valueOf((Long) result[1]));
+
+        // post.setLikes(BigInteger.valueOf((Long) result[2]));
+
+        // post.setDislikes(BigInteger.valueOf((Long) result[3]));
+
+        // post.setId(BigInteger.valueOf((Long) result[4]));
+
+        // post.setCreated_at((Timestamp) result[5]);
+
+        // post.setFirst_name((String) result[6]);
+
+        // post.setLast_name((String) result[7]);
+
+        // post.setUpdated_at((Timestamp) result[8]);
+
+        // post.setAddress((String) result[9]);
+
+        // post.setMedia_content_path((String) result[10]);
+
+        // return (post);
+        // }));
     }
 
     public boolean createPost(String post_content, List<MultipartFile> postImages) {

@@ -2,6 +2,7 @@ package com.example.socialmedia.socialmediaapp.DAO;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,5 +31,7 @@ public class ShowPosts {
 
     private String address;
 
-    private String media_content_path;
+    private List<String> media_content_path;
+
+    // private String media_content_path;
 }

@@ -1,5 +1,6 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,9 +8,15 @@ import java.sql.Timestamp;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.socialmedia.socialmediaapp.Aspect.SendEmail;
+import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
+import com.example.socialmedia.socialmediaapp.DAO.ShowUsers;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
@@ -99,15 +106,38 @@ public class UserServices {
     }
 
     @Transactional
-    public void updateLastLogin(String email)
-    {
+    public void updateLastLogin(String email) {
         userRepository.updateLastLogin(email);
     }
 
     @Transactional
-    public void updatePassword(String email,String password)
-    {
+    public void updatePassword(String email, String password) {
         userRepository.updatePassword(password, email);
+    }
+
+    public Page<ShowUsers> getAllUsers(Pageable pageable) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Page<Object[]> rawresults = userRepository.explore(
+                userDetails.getUserId(), pageable);
+
+        return (rawresults.map(result -> {
+            ShowUsers users = new ShowUsers();
+
+            users.setFirst_name((String) result[1]);
+
+            users.setLast_name((String) result[2]);
+
+            users.setEmail((String) result[3]);
+
+            users.setGender((Integer) result[13]);
+
+            users.setProfile_photo((String) result[17]);
+
+            return (users);
+        }));
     }
 
 }
