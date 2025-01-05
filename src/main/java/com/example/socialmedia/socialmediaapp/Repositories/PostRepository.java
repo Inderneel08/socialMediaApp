@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -52,5 +53,9 @@ public interface PostRepository extends JpaRepository<Posts, BigInteger> {
 
     @Query(value = "SELECT post.post_content,post.userid,post.likes,post.dislikes,post.id,post.created_at AS created_at ,u.first_name,u.last_name,post.updated_at,u.address,m.media_content_path FROM post LEFT JOIN users AS u ON post.userId = u.id LEFT JOIN media_posts AS m ON m.post_id = post.id WHERE post.userid = :userid", nativeQuery = true)
     Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid, Pageable pageable);
+
+    @Modifying
+    @Query(value = "UPDATE post set post.likes = post.likes+1 where post.id = :postId", nativeQuery = true)
+    void increaseLikeCount(@Param("postId") BigInteger postId);
 
 }

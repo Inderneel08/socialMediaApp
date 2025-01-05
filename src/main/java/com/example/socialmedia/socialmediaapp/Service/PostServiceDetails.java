@@ -150,9 +150,9 @@ public class PostServiceDetails {
     @Transactional
     public void likePost(BigInteger postid, BigInteger userid) {
 
-        Likes likes = likeRepository.findLikes(postid,userid);
+        Likes likes = likeRepository.findLikes(postid, userid);
 
-        if(likes==null){
+        if (likes == null) {
             likes = new Likes();
 
             likes.setPost_id(postid);
@@ -161,15 +161,28 @@ public class PostServiceDetails {
 
             likes.setUserid(userid);
 
-            likeRepository.save(likes);
-        }
-        else{
-
-            if(likes.getAction()==1){
-                likeRepository.unlikePost(postid,userid);
+            try {
+                likeRepository.save(likes);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                likeRepository.likePost(postid, userid);
+
+        } else {
+
+            try {
+                if (likes.getAction() == 1) {
+                    likeRepository.unlikePost(postid, userid);
+                } else {
+                    likeRepository.likePost(postid, userid);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                postRepository.increaseLikeCount(postid);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
