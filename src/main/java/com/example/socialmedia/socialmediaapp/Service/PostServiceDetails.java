@@ -48,28 +48,32 @@ public class PostServiceDetails {
                 userDetails.getUserId(), pageable);
 
         // rawresults.forEach(result -> {
-        // System.out.println("Post Content: " + result[0] + " Class: " +
+        // System.out.println("-----------------------------");
+
+        // System.out.println(result[0] + " " +
         // result[0].getClass());
-        // System.out.println("User ID: " + result[1] + " Class: " +
+        // System.out.println(result[1] + " " +
         // result[1].getClass());
-        // System.out.println("Likes: " + result[2] + " Class: " +
+        // System.out.println(result[2] + " " +
         // result[2].getClass());
-        // System.out.println("Dislikes: " + result[3] + " Class: " +
+        // System.out.println(result[3] + " " +
         // result[3].getClass());
-        // System.out.println("Post ID: " + result[4] + " Class: " +
+        // System.out.println(result[4] + " " +
         // result[4].getClass());
-        // System.out.println("First Name: " + result[5] + " Class: " +
+        // System.out.println(result[5] + " " +
         // result[5].getClass());
-        // System.out.println("Last Name: " + result[6] + " Class: " +
+        // System.out.println(result[6] + " " +
         // result[6].getClass());
-        // System.out.println("Updated At: " + result[7] + " Class: " +
+        // System.out.println(result[7] + " " +
         // result[7].getClass());
-        // System.out.println("Address: " + result[8] + " Class: " +
+        // System.out.println(result[8] + " " +
         // result[8].getClass());
-        // System.out.println("Media Content Path: " + result[9] + " Class: " +
+        // System.out.println(result[9] + " " +
         // result[9].getClass());
-        // System.out.println("Created At: " + result[10] + " Class: " +
+        // System.out.println(result[10] + " " +
         // result[10].getClass());
+
+        // System.out.println(result[11] + " " + result[11].getClass());
         // });
 
         Map<BigInteger, ShowPosts> postMap = new LinkedHashMap<>();
@@ -92,22 +96,28 @@ public class PostServiceDetails {
 
                 post.setId(BigInteger.valueOf((Long) result[4]));
 
-                post.setCreated_at((Timestamp) result[5]);
+                if ((int) result[5] == 0) {
+                    post.setLiked(false);
+                } else {
+                    post.setLiked(true);
+                }
 
-                post.setFirst_name((String) result[6]);
+                post.setCreated_at((Timestamp) result[6]);
 
-                post.setLast_name((String) result[7]);
+                post.setFirst_name((String) result[7]);
 
-                post.setUpdated_at((Timestamp) result[8]);
+                post.setLast_name((String) result[8]);
 
-                post.setAddress((String) result[9]);
+                post.setUpdated_at((Timestamp) result[9]);
+
+                post.setAddress((String) result[10]);
 
                 post.setMedia_content_path(new ArrayList<>());
 
                 postMap.put(postId, post);
             }
 
-            String mediaPath = (String) result[10];
+            String mediaPath = (String) result[11];
 
             if (mediaPath != null) {
                 post.getMedia_content_path().add(mediaPath);
@@ -150,40 +160,46 @@ public class PostServiceDetails {
     @Transactional
     public void likePost(BigInteger postid, BigInteger userid) {
 
-        Likes likes = likeRepository.findLikes(postid, userid);
+        Likes likes = new Likes();
 
-        if (likes == null) {
-            likes = new Likes();
+        likes.setPost_id(postid);
 
-            likes.setPost_id(postid);
+        likes.setAction(1);
 
-            likes.setAction(1);
+        likes.setUserid(userid);
 
-            likes.setUserid(userid);
+        try {
+            likeRepository.save(likes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            try {
-                likeRepository.save(likes);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            postRepository.increaseLikeCount(postid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        } else {
+    @Transactional
+    public void updateLikeStatus(BigInteger postid, BigInteger userid) {
+        likeRepository.likePost(postid, userid);
 
-            try {
-                if (likes.getAction() == 1) {
-                    likeRepository.unlikePost(postid, userid);
-                } else {
-                    likeRepository.likePost(postid, userid);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            postRepository.increaseLikeCount(postid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            try {
-                postRepository.increaseLikeCount(postid);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    @Transactional
+    public void updateUnlikeStatus(BigInteger postid, BigInteger userid) {
+        likeRepository.unlikePost(postid, userid);
+
+        try {
+            postRepository.decreaseLikeCount(postid);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

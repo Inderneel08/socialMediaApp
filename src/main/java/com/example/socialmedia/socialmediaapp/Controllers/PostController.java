@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.socialmedia.socialmediaapp.DAO.Likes;
 import com.example.socialmedia.socialmediaapp.DAO.MakePost;
 import com.example.socialmedia.socialmediaapp.DAO.Posts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
+import com.example.socialmedia.socialmediaapp.Repositories.LikeRepository;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.PostServiceDetails;
 
@@ -33,11 +35,14 @@ public class PostController {
     @Autowired
     private PostServiceDetails postServiceDetails;
 
+    @Autowired
+    private LikeRepository likeRepository;
+
     @GetMapping("/posts/initial")
     public Page<ShowPosts> getInitialFeeds(@RequestParam(value = "page") int page) {
         int size = 10;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("created_at").descending());
+        Pageable pageable = PageRequest.of(page, size);
 
         return (postServiceDetails.getLast24HoursPosts(pageable));
     }
@@ -50,7 +55,21 @@ public class PostController {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        postServiceDetails.likePost(id,userDetails.getUserId());
+        Likes likes = likeRepository.findLikes(id, userDetails.getUserId());
+
+        if (likes != null) {
+            if (likes.getAction() == 0) {
+                postServiceDetails.updateLikeStatus(id, userDetails.getUserId());
+
+                return (ResponseEntity.ok("Success"));
+            } else {
+                postServiceDetails.updateUnlikeStatus(id, userDetails.getUserId());
+
+                return (ResponseEntity.ok("Unlike"));
+            }
+        } else {
+            postServiceDetails.likePost(id, userDetails.getUserId());
+        }
 
         return (ResponseEntity.ok("Success"));
     }

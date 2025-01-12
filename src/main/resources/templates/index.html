@@ -289,7 +289,11 @@
                 <!----------------- END OF STORIES -------------------->
                 <form class="create-post">
                     <div class="profile-photo">
-                        <img th:src="${profile_image_path}" alt="profile-1">
+                        <img th:if="${profile_image_path != null}" th:src="${profile_image_path}" alt="profile-image">
+
+                        <img th:if="${profile_image_path == null and gender == 'MALE'}" th:src="@{/images/man.png}" alt="profile-image">
+
+                        <img th:if="${profile_image_path == null and gender == 'FEMALE'}" th:src="@{/images/female.jpg}" alt="profile-image">
                     </div>
 
                     <input type="text" th:placeholder="|What's on your mind, ${firstname}?|" id="create-post" th:field="*{postContent}" onclick="openpost()">
@@ -1044,7 +1048,7 @@
 
                     <div class="action-buttons">
                         <div class="interaction-buttons">
-                            <span><i class="uil uil-heart" id="uil-heart-${post.id}"></i></span>
+                            <span><i class="uil uil-heart ${post.liked == true ? 'heart-red' : ''}" id="uil-heart-${post.id}"></i></span>
                             <span><i class="uil uil-comment-dots" id="uil-comment-dots-${post.id}"></i></span>
                             <span><i class="uil uil-share-alt" id="uil-share-alt-${post.id}"></i></span>
                         </div>
@@ -1084,11 +1088,13 @@
                     success: function (data) {
 
                         if(data==='Success'){
-                            console.log(1);
-
                             $(`#uil-heart-${post.id}`).addClass('heart-red'); // Add the 'heart-red' class on click to fill the heart
                         }
-
+                        else{
+                            if(data==='Unlike'){
+                                $(`#uil-heart-${post.id}`).removeClass('heart-red'); // Add the 'heart-red' class on click to fill the heart
+                            }
+                        }
                     },
                     error: function (error) {
                         console.error("Failed to like the post:", error); // Handle errors

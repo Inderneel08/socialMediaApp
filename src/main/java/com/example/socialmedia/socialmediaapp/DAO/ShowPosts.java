@@ -21,6 +21,8 @@ public class ShowPosts {
 
     private BigInteger userId;
 
+    private boolean liked;
+
     private Timestamp created_at;
 
     private Timestamp updated_at;

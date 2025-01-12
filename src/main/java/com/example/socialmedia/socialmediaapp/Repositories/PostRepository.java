@@ -51,11 +51,15 @@ public interface PostRepository extends JpaRepository<Posts, BigInteger> {
     // Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid,
     // Pageable pageable);
 
-    @Query(value = "SELECT post.post_content,post.userid,post.likes,post.dislikes,post.id,post.created_at AS created_at ,u.first_name,u.last_name,post.updated_at,u.address,m.media_content_path FROM post LEFT JOIN users AS u ON post.userId = u.id LEFT JOIN media_posts AS m ON m.post_id = post.id WHERE post.userid = :userid", nativeQuery = true)
+    @Query(value = "SELECT post.post_content,post.userid,post.likes,post.dislikes,post.id,CASE WHEN l.userid = :userid AND u.id = :userid AND l.action != 0 THEN TRUE ELSE FALSE END AS liked,post.created_at,u.first_name,u.last_name,post.updated_at,u.address,m.media_content_path FROM post LEFT JOIN users AS u ON post.userId = u.id LEFT JOIN media_posts AS m ON m.post_id = post.id LEFT JOIN likes AS l ON l.post_id = post.id ORDER BY post.created_at DESC", nativeQuery = true)
     Page<Object[]> findPostsFromLast24Hours(@Param("userid") BigInteger userid, Pageable pageable);
 
     @Modifying
     @Query(value = "UPDATE post set post.likes = post.likes+1 where post.id = :postId", nativeQuery = true)
     void increaseLikeCount(@Param("postId") BigInteger postId);
+
+    @Modifying
+    @Query(value = "UPDATE post set post.likes = post.likes-1 where post.id = :postId", nativeQuery = true)
+    void decreaseLikeCount(@Param("postId") BigInteger postId);
 
 }
