@@ -138,6 +138,8 @@ public class UserServices {
 
             users.setProfile_photo((String) result[17]);
 
+            users.setApproved((Integer) result[19]);
+
             return (users);
         }));
     }
