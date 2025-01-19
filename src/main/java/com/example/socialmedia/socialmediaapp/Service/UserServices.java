@@ -126,6 +126,8 @@ public class UserServices {
         return (rawresults.map(result -> {
             ShowUsers users = new ShowUsers();
 
+            users.setId(BigInteger.valueOf((Long) result[0]));
+
             users.setFirst_name((String) result[1]);
 
             users.setLast_name((String) result[2]);

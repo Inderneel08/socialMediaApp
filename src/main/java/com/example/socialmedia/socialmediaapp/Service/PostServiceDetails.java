@@ -44,6 +44,8 @@ public class PostServiceDetails {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
+        System.out.println("UserId : ->"+ userDetails.getUserId());
+
         Page<Object[]> rawresults = postRepository.findPostsFromLast24Hours(
                 userDetails.getUserId(), pageable);
 
@@ -60,7 +62,7 @@ public class PostServiceDetails {
         // result[3].getClass());
         // System.out.println(result[4] + " " +
         // result[4].getClass());
-        // System.out.println(result[5] + " " +
+        // System.out.println("Liked:->"+ result[5] + " " +
         // result[5].getClass());
         // System.out.println(result[6] + " " +
         // result[6].getClass());
@@ -72,8 +74,6 @@ public class PostServiceDetails {
         // result[9].getClass());
         // System.out.println(result[10] + " " +
         // result[10].getClass());
-
-        // System.out.println(result[11] + " " + result[11].getClass());
         // });
 
         Map<BigInteger, ShowPosts> postMap = new LinkedHashMap<>();

@@ -58,6 +58,13 @@
     cursor: pointer;
 }
 
+.requested {
+    background-color: white !important;
+    color: blue !important;
+    border: 1px solid blue !important;
+}
+
+
 .swiper-slide {
     width: 100% !important; /* Each slide should take 100% of the container's width */
     flex-shrink: 0; /* Prevent the slide from shrinking */
@@ -102,6 +109,54 @@
 .remove-image {
     margin-left: 5px;
 }
+
+.friend-card {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.friend-profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.friend-info h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.friend-info p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.add-friend-btn {
+    background-color: #008CBA;
+    color: white;
+    padding: 8px 12px; /* Uniform padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%; /* Ensures button width consistency */
+    max-width: 120px; /* Prevents it from expanding too much */
+    text-align: center;
+    white-space: nowrap; /* Prevents text from wrapping */
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+.add-friend-btn:hover {
+    background-color: #005f7f;
+    transform: scale(1.05);
+}
+
 </style>
 
 <body>
@@ -195,6 +250,7 @@
                             Explore
                         </h3>
                     </a>
+
                     <a class="menu-item"  id="notifications" onclick="explore(this)">
                         <span><i class="uil uil-bell"><small class="notification-count">9+</small></i></span>
                         <h3>Notification</h3>
@@ -959,63 +1015,75 @@
         });
     }
 
+    function appendFriends(friends)
+    {
+        console.log(friends);
+
+        var feedsContainer = $('#feeds');
+
+        friends.forEach(friend => {
+            var profilePhoto=null;
+
+            if(friend.profile_photo==null){
+                if(friend.gender==0){
+                    profilePhoto="/images/man.png";
+                }
+                else{
+                    profilePhoto="/images/female.jpg";
+                }
+            }
+            else{
+                profilePhoto=friend.profile_photo;
+            }
+
+
+            var friendElement = `
+                <br/>
+                <div class="friend-card p-3 border rounded">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="${profilePhoto}" alt="${friend.first_name} ${friend.last_name}" class="friend-profile-photo rounded-circle" width="50" height="50">
+                        </div>
+                        <div class="col">
+                            <h4 class="mb-0">${friend.first_name} ${friend.last_name}</h4>
+                        </div>
+                        <div class="col-auto">
+                            <a class="btn btn-primary add-friend-btn" id="add-friend-${friend.id}">Follow</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            `;
+
+            feedsContainer.append(friendElement);
+
+            $(`#add-friend-${friend.id}`).on('click', function (event) {
+                $.ajax({
+                    url:'/sendFriendRequest',
+                    method:'POST',
+                    data: {friendId: friend.id},
+                    success: function(data) {
+                        if(data==='Success'){
+                            console.log(1);
+                        }
+                    },
+                    error: function(error){
+                        console.error("Error : -> "+ error);
+
+                        event.target.textContent="Follow";
+
+                        event.target.classList.remove("requested");
+                    }
+                });
+            });
+        });
+    }
+
     function appendPosts(posts)
     {
         console.log(posts);
 
-        // <div class="feed">
-        //     <div class="head">
-        //         <div class="user">
-        //             <div class="profile-photo">
-        //                 <img th:src="@{/images/profile-13.jpg}" alt="profile-13">
-        //             </div>
-        //             <div class="info">
-        //                 <h3>Lana Rose</h3>
-        //                 <small>Dubai, 15 Minutes Ago</small>
-        //             </div>
-        //         </div>
-        //         <span class="edit">
-        //             <i class="uil uil-ellipsis-h"></i>
-        //         </span>
-        //     </div>
-
-        //     <div class="photo">
-        //         <img th:src="@{/images/feed-1.jpg}" alt="feed-1">
-        //     </div>
-
-        //     <div class="action-buttons">
-        //         <div class="interaction-buttons">
-        //             <span><i class="uil uil-heart"></i></span>
-        //             <span><i class="uil uil-comment-dots"></i></span>
-        //             <span><i class="uil uil-share-alt"></i></span>
-        //         </div>
-        //         <div class="bookmark">
-        //             <span><i class="uil uil-bookmark-full"></i></span>
-        //         </div>
-        //     </div>
-
-        //     <div class="liked-by">
-        //         <span><img th:src="@{/images/profile-10.jpg}" alt="profile-10"></span>
-        //         <span><img th:src="@{/images/profile-4.jpg}" alt="profile-4"></span>
-        //         <span><img th:src="@{/images/profile-15.jpg}" alt="profile-15"></span>
-        //         <p>Liked by <b>Ernest Achiever</b> and <b>2, 323 others</b></p>
-        //     </div>
-
-        //     <div class="caption">
-        //         <p><b>Lana Rose</b> Lorem ipsum dolor sit quisquam eius. 
-        //         <span class="harsh-tag">#lifestyle</span></p>
-        //     </div>
-
-        //     <div class="comments text-muted">
-        //         View all 277 comments
-        //     </div>
-        // </div>
-
         var feedsContainer = $('#feeds');
-
-        // <div class="profile-photo">
-        //     <img th:src="@{/images/profile-13.jpg}" alt="profile-13">
-        // </div>
 
         posts.forEach((post,index) => {
             var postElement = `
@@ -1146,12 +1214,18 @@
 
             if (currentScrollTop >= previousScrollTop) {
                 if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+
                     if(!isLoading){
 
                         if(activeMenuText==='Home' || activeMenuText==null){
                             currentPage++;
 
                             fetchPosts(currentPage);
+                        }
+                        else if(activeMenuText === 'Explore'){
+                            currentPage++;
+
+                            exploreAllusers(activeMenuText);
                         }
                     }
                 }
@@ -1229,6 +1303,21 @@
             const prevInputGroup = inputGroup.previousElementSibling;
             container.removeChild(inputGroup);
         }
+
+        if(e.target.classList.contains('add-friend-btn')){
+
+            if(event.target.textContent=="Requested"){
+                event.target.textContent="Follow";
+
+                event.target.classList.remove("requested");
+            }
+            else{
+                event.target.textContent = "Requested";
+
+                event.target.classList.add("requested");
+            }
+        }
+
     });
 </script>
 
@@ -1278,7 +1367,7 @@
                 success: function (data) {
 
                     if(data && data.size>0){
-                        console.log(data.content);
+                        appendFriends(data.content);
 
                         isLoading=false;
                     }

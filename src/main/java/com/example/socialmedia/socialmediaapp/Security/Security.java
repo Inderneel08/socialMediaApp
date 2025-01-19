@@ -19,64 +19,67 @@ import com.example.socialmedia.socialmediaapp.Service.CustomUserDetailService;
 @EnableWebSecurity
 public class Security {
 
-    @Autowired
-    private CustomUserDetailService customUserDetailService;
+        @Autowired
+        private CustomUserDetailService customUserDetailService;
 
-    @Autowired
-    private EmailCaptureFilter emailCaptureFilter;
+        @Autowired
+        private EmailCaptureFilter emailCaptureFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests()
-                .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
-                        "/fonts/**")
-                .permitAll()
-                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login",
-                        "/forgot-password","/change-password","/showPassword/**","/set-password")
-                .anonymous()
-                .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial", "/upload-profile-photo",
-                        "/postComment","/changeMyPassword","/exploreFriends","/perform-like-unlike")
-                .hasAuthority("ROLE_USER")
-                .anyRequest().authenticated()
-                .and().formLogin().loginPage("/login")
-                .loginProcessingUrl("/do-login")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/home")
-                .and().logout().logoutUrl("/logout")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.csrf().disable().authorizeHttpRequests()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
+                                                "/fonts/**")
+                                .permitAll()
+                                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login",
+                                                "/forgot-password", "/change-password", "/showPassword/**",
+                                                "/set-password")
+                                .anonymous()
+                                .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial",
+                                                "/upload-profile-photo",
+                                                "/postComment", "/changeMyPassword", "/exploreFriends",
+                                                "/perform-like-unlike", "/sendFriendRequest")
+                                .hasAuthority("ROLE_USER")
+                                .anyRequest().authenticated()
+                                .and().formLogin().loginPage("/login")
+                                .loginProcessingUrl("/do-login")
+                                .usernameParameter("email")
+                                .passwordParameter("password")
+                                .defaultSuccessUrl("/home")
+                                .and().logout().logoutUrl("/logout")
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                                .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID");
 
-        http.addFilterBefore(emailCaptureFilter, UsernamePasswordAuthenticationFilter.class);
+                http.addFilterBefore(emailCaptureFilter, UsernamePasswordAuthenticationFilter.class);
 
-        http.authenticationProvider(daoAuthenticationProvider());
+                http.authenticationProvider(daoAuthenticationProvider());
 
-        return (http.build());
-    }
+                return (http.build());
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // System.out.println("Using CustomPasswordEncoder");
-        return new CustomPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                // System.out.println("Using CustomPasswordEncoder");
+                return new CustomPasswordEncoder();
+        }
 
-    // @Bean
-    // public AuthenticationManager
-    // authenticationManager(AuthenticationConfiguration config) throws Exception {
-    // AuthenticationManager manager = config.getAuthenticationManager();
+        // @Bean
+        // public AuthenticationManager
+        // authenticationManager(AuthenticationConfiguration config) throws Exception {
+        // AuthenticationManager manager = config.getAuthenticationManager();
 
-    // return manager;
-    // }
+        // return manager;
+        // }
 
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider()
-            throws Exception {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserDetailService);
-        provider.setPasswordEncoder(passwordEncoder());
-        // System.out.println("DaoAuthenticationProvider configured");
-        return provider;
-    }
+        @Bean
+        public DaoAuthenticationProvider daoAuthenticationProvider()
+                        throws Exception {
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+                provider.setUserDetailsService(customUserDetailService);
+                provider.setPasswordEncoder(passwordEncoder());
+                // System.out.println("DaoAuthenticationProvider configured");
+                return provider;
+        }
 }

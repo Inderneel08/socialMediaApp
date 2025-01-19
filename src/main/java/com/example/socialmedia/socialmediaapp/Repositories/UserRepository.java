@@ -40,6 +40,7 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     @Query(value = "UPDATE users set users.password = :password where users.email = :email", nativeQuery = true)
     void updatePassword(@Param("password") String password, @Param("email") String email);
 
-    @Query(value = "SELECT * FROM users where id != :userid", nativeQuery = true)
+    // @Query(value = "SELECT * FROM users where id != :userid", nativeQuery = true)
+    @Query(value = "SELECT users.*,CASE WHEN f.senderId = :userid THEN 1 ELSE 0 END AS approved from users LEFT JOIN friends as f on users.id=f.recieverId  AND f.senderId = :userid where users.id != :userid;", nativeQuery = true)
     Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
 }

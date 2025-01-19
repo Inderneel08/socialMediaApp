@@ -8,9 +8,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "friends")
+@Getter
+@Setter
 public class Friends {
 
     @Id
@@ -22,9 +26,6 @@ public class Friends {
 
     @Column(name = "recieverId")
     private BigInteger recieverId;
-
-    @Column(name = "accepted")
-    private int accepted;
 
     @Column(name = "current_status")
     private int current_status;
