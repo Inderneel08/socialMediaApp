@@ -32,9 +32,11 @@ public class CustomUserDetails implements UserDetails {
 
     private String profile_photo;
 
+    private int profile_type;
+
     public CustomUserDetails(BigInteger userId, String firstName, String lastName, String email, String password,
             int role, int gender,
-            String address, String status, String phone, String profile_photo) {
+            String address, String status, String phone, String profile_photo,int profile_type) {
 
         this.userId = userId;
 
@@ -57,6 +59,8 @@ public class CustomUserDetails implements UserDetails {
         this.phone = phone;
 
         this.profile_photo = profile_photo;
+
+        this.profile_type = profile_type;
     }
 
     @Override
@@ -86,6 +90,16 @@ public class CustomUserDetails implements UserDetails {
 
     public String getLastName() {
         return (this.lastName);
+    }
+
+    public void setProfileType(int profile_type)
+    {
+        this.profile_type=profile_type;
+    }
+
+    public int getProfileType()
+    {
+        return(this.profile_type);
     }
 
     public void setLastName(String lastname) {

@@ -17,7 +17,8 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     private UserServices userServices;
 
-    @Override public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         // System.out.println("Loading user with email: " + email);
 
         Users user = userRepository.findEmail(email);
@@ -30,9 +31,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
         userServices.updateLastLogin(email);
 
-        return new CustomUserDetails(user.getId(),user.getFirst_name(), user.getLast_name(), user.getEmail(), user.getPassword(),
+        return new CustomUserDetails(user.getId(), user.getFirst_name(), user.getLast_name(), user.getEmail(),
+                user.getPassword(),
                 user.getRole(), user.getGender(), user.getAddress(), user.getStatus(), user.getPhone(),
-                user.getProfile_photo());
+                user.getProfile_photo(),user.getProfile_type());
     }
 
     // public Collection<? extends GrantedAuthority> authorities() {

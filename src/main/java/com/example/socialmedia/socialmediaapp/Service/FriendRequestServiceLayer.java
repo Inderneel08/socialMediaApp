@@ -20,15 +20,26 @@ public class FriendRequestServiceLayer {
 
     @Transactional
     public void sendFriendRequest(BigInteger senderId, BigInteger receiverId) {
-        Friends friends = new Friends();
+        Friends friends = friendRepository.getFriendsDetails(senderId, receiverId);
 
-        friends.setSenderId(senderId);
+        if (friends == null) {
+            friends = new Friends();
 
-        friends.setRecieverId(receiverId);
+            friends.setSenderId(senderId);
 
-        friends.setCurrent_status(0);
+            friends.setRecieverId(receiverId);
 
-        friendRepository.save(friends);
+            friends.setCurrent_status(0);
+
+            friendRepository.save(friends);
+        } else {
+            // In both case when the friend requests currentStatus is 0 or 1. The friend
+            // request object is deleted.
+            // 0 means when the request was raised for following and 1 means when 1 person
+            // followed the other. In both cases we should delete the mapping.
+
+            friendRepository.deleteAssociation(senderId, receiverId);
+        }
     }
 
 }

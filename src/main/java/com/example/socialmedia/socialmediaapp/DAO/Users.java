@@ -79,4 +79,7 @@ public class Users {
 
     @Column(name = "profile_photo")
     private String profile_photo;
+
+    @Column(name = "profile_type")
+    private int profile_type;
 }

@@ -64,6 +64,14 @@
     border: 1px solid blue !important;
 }
 
+.unfollow {
+    background-color: red !important;
+
+    color: white !important;
+
+    border: 1px solid red !important;
+}
+
 
 .swiper-slide {
     width: 100% !important; /* Each slide should take 100% of the container's width */
@@ -1036,7 +1044,6 @@
                 profilePhoto=friend.profile_photo;
             }
 
-
             var friendElement = `
                 <br/>
                 <div class="friend-card p-3 border rounded">
@@ -1047,8 +1054,8 @@
                         <div class="col">
                             <h4 class="mb-0">${friend.first_name} ${friend.last_name}</h4>
                         </div>
-                        <div class="col-auto">
-                            <a class="btn btn-primary add-friend-btn" id="add-friend-${friend.id}">Follow</a>
+                        <div class="col-auto" id="friend-buttons-${friend.id}">
+
                         </div>
                     </div>
                 </div>
@@ -1056,6 +1063,24 @@
             `;
 
             feedsContainer.append(friendElement);
+
+            var buttonsContainer = $(`#friend-buttons-${friend.id}`);
+
+            if (friend.approved == -1) {
+                buttonsContainer.append(`
+                    <a class="btn btn-primary add-friend-btn" id="add-friend-${friend.id}">Follow</a>
+                `);
+            } else if (friend.approved == 0) {
+                buttonsContainer.append(`
+                    <a class="btn btn-primary add-friend-btn requested" id="add-friend-${friend.id}">Requested</a>
+                `);
+            }
+            else if(friend.approved == 1){
+                buttonsContainer.append(`
+                    <a class="btn btn-primary add-friend-btn unfollow" id="add-friend-${friend.id}">UnFollow</a>
+                `);
+            }
+
 
             $(`#add-friend-${friend.id}`).on('click', function (event) {
                 $.ajax({
@@ -1210,7 +1235,10 @@
         var previousScrollTop=$(window).scrollTop();
 
         $(window).on('scroll', function(){
+
             var currentScrollTop = $(this).scrollTop(); // Get the current scroll position
+
+            console.log(currentScrollTop >= previousScrollTop);
 
             if (currentScrollTop >= previousScrollTop) {
                 if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
@@ -1343,6 +1371,12 @@
         let activeMenu = $(element);
 
         activeMenuText = activeMenu.find('h3').text().trim(); // Trim text to remove extra whitespace
+
+        // previousScrollTop=$(this).scrollTop();
+
+        console.log("SidebarText : ->" +sidebarText);
+
+        console.log("ActiveMenuText : ->" +activeMenuText);
 
         if(sidebarText != activeMenuText){
             $('#feeds').empty();

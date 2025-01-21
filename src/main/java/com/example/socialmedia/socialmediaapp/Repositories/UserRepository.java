@@ -24,9 +24,10 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     void updateVerificationStatus(@Param("email") String email);
 
     @Modifying
-    @Query(value = "UPDATE users set users.first_name = :firstname, users.last_name = :lastname, users.phone = :phone, users.address = :address, users.updated_at = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
+    @Query(value = "UPDATE users set users.first_name = :firstname, users.last_name = :lastname, users.phone = :phone, users.address = :address,users.profile_type = :profileType, users.updated_at = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
     void updateProfile(@Param("firstname") String firstname, @Param("lastname") String lastname,
-            @Param("phone") String phone, @Param("address") String address, @Param("email") String email);
+            @Param("phone") String phone, @Param("address") String address, @Param("email") String email,
+            @Param("profileType") int profileType);
 
     @Modifying
     @Query(value = "UPDATE users set users.last_login = CURRENT_TIMESTAMP where users.email = :email", nativeQuery = true)
@@ -41,6 +42,6 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     void updatePassword(@Param("password") String password, @Param("email") String email);
 
     // @Query(value = "SELECT * FROM users where id != :userid", nativeQuery = true)
-    @Query(value = "SELECT users.*,CASE WHEN f.senderId = :userid THEN 1 ELSE 0 END AS approved from users LEFT JOIN friends as f on users.id=f.recieverId  AND f.senderId = :userid where users.id != :userid;", nativeQuery = true)
+    @Query(value = "SELECT users.*,CASE WHEN f.senderId = :userid THEN CASE WHEN f.current_status=1 THEN 1 ELSE 0 END ELSE -1 END AS approved from users LEFT JOIN friends as f on users.id=f.recieverId  AND f.senderId = :userid where users.id != :userid ORDER BY users.created_at DESC", nativeQuery = true)
     Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
 }

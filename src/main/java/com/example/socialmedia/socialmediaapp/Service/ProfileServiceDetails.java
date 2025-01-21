@@ -16,8 +16,8 @@ public class ProfileServiceDetails {
     private UserRepository userRepository;
 
     @Transactional
-    public void updateProfile(String firstname, String lastname, String phone, String address, String email) {
-        userRepository.updateProfile(firstname, lastname, phone, address, email);
+    public void updateProfile(String firstname, String lastname, String phone, String address, String email,int profileType) {
+        userRepository.updateProfile(firstname, lastname, phone, address, email,profileType);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -30,6 +30,8 @@ public class ProfileServiceDetails {
         userDetails.setAddress(address);
 
         userDetails.setPhoneNumber(phone);
+
+        userDetails.setProfileType(profileType);
     }
 
 }

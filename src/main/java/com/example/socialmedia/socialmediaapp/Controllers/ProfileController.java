@@ -63,7 +63,7 @@ public class ProfileController {
 
         model.addAttribute("profile_photo", userDetails.getProfilePhoto());
 
-        // System.out.println(userDetails.getProfilePhoto());
+        model.addAttribute("profileType", userDetails.getProfileType());
 
         if (!redirected) {
             request.getSession().removeAttribute("successMessage");
@@ -87,7 +87,18 @@ public class ProfileController {
 
         String email = profileData.get("email");
 
-        profileServiceDetails.updateProfile(firstname, lastname, phone, address, email);
+        String profileType = profileData.get("profile_type");
+
+        int profile_type;
+
+        if (profileType.equals("public")) {
+            profile_type = 0;
+        } else {
+            profile_type = 1;
+        }
+
+        profileServiceDetails.updateProfile(firstname, lastname, phone, address,
+                email, profile_type);
 
         return (ResponseEntity.ok().build());
     }

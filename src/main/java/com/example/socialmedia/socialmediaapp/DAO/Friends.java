@@ -1,6 +1,9 @@
 package com.example.socialmedia.socialmediaapp.DAO;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,4 +32,8 @@ public class Friends {
 
     @Column(name = "current_status")
     private int current_status;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp created_at;
 }

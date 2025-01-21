@@ -32,7 +32,9 @@ public class FriendsController {
     public Page<ShowUsers> explore(@RequestParam(value = "page") int page) {
         int size = 10;
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("created_at").descending());
+        // , Sort.by("created_at").descending()
+
+        Pageable pageable = PageRequest.of(page, size);
 
         return (userServices.getAllUsers(pageable));
     }
