@@ -21,10 +21,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.socialmedia.socialmediaapp.DAO.Likes;
 import com.example.socialmedia.socialmediaapp.DAO.MakePost;
-import com.example.socialmedia.socialmediaapp.DAO.Posts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
 import com.example.socialmedia.socialmediaapp.Repositories.LikeRepository;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
+import com.example.socialmedia.socialmediaapp.Service.NotificationServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.PostServiceDetails;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +37,9 @@ public class PostController {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    @Autowired
+    private NotificationServiceDetails notificationServiceDetails;
 
     @GetMapping("/posts/initial")
     public Page<ShowPosts> getInitialFeeds(@RequestParam(value = "page") int page) {

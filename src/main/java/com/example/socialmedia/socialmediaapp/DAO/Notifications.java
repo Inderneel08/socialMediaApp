@@ -26,4 +26,10 @@ public class Notifications {
 
     @Column(name = "action")
     private String action;
+
+    @Column(name = "recieverId")
+    private BigInteger recieverId;
+
+    @Column(name = "postId")
+    private BigInteger postId;
 }
