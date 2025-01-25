@@ -210,8 +210,6 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" th:href="@{/view-profile}">View Profile</a></li>
-                    <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                    <li><a class="dropdown-item" style="cursor: pointer; left: 1%;">View Notifications</a></li>
                     <li>
                         <form th:action="@{/logout}" method="post">
                             <button type="submit" class="dropdown-item form-control" style="cursor: pointer; font-size: inherit; left: 5%; border: none; background: none;">Logout</button>
@@ -260,9 +258,13 @@
                     </a>
 
                     <a class="menu-item"  id="notifications" onclick="explore(this)">
-                        <span><i class="uil uil-bell"><small class="notification-count">9+</small></i></span>
+                        <span>
+                            <i class="uil uil-bell">
+                                <!-- <small class="notification-count">9+</small> -->
+                            </i>
+                        </span>
                         <h3>Notification</h3>
-                        <!--------------- NOTIFICATION POPUP --------------->
+                        <!-- ------------- NOTIFICATION POPUP -------------
                         <div class="notifications-popup">
                             <div>
                                 <div class="profile-photo">
@@ -318,7 +320,7 @@
                                     <small class="text-muted">1 Hour Ago</small>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <!--------------- END NOTIFICATION POPUP --------------->
                     </a>
                     <a class="menu-item" id="messages-notifications" onclick="explore(this)">
@@ -1025,7 +1027,7 @@
 
     function appendFriends(friends)
     {
-        console.log(friends);
+        // console.log(friends);
 
         var feedsContainer = $('#feeds');
 
@@ -1106,7 +1108,7 @@
 
     function appendPosts(posts)
     {
-        console.log(posts);
+        // console.log(posts);
 
         var feedsContainer = $('#feeds');
 
@@ -1232,13 +1234,13 @@
     $(document).ready(function () {
         fetchPosts(currentPage);
 
-        var previousScrollTop=$(window).scrollTop();
+        let previousScrollTop=$(window).scrollTop();
+
+        let currentScrollTop = $(this).scrollTop(); // Get the current scroll position
 
         $(window).on('scroll', function(){
 
-            var currentScrollTop = $(this).scrollTop(); // Get the current scroll position
-
-            console.log(currentScrollTop >= previousScrollTop);
+            // console.log(currentScrollTop >= previousScrollTop);
 
             if (currentScrollTop >= previousScrollTop) {
                 if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
@@ -1372,11 +1374,11 @@
 
         activeMenuText = activeMenu.find('h3').text().trim(); // Trim text to remove extra whitespace
 
-        // previousScrollTop=$(this).scrollTop();
+        previousScrollTop=0;
+        currentScrollTop=0;
 
-        console.log("SidebarText : ->" +sidebarText);
-
-        console.log("ActiveMenuText : ->" +activeMenuText);
+        $('#feeds').scrollTop(0); // If #feeds is a scrollable div
+        $(window).scrollTop(0); // If you want to scroll the whole page
 
         if(sidebarText != activeMenuText){
             $('#feeds').empty();
@@ -1393,6 +1395,9 @@
     function exploreAllusers(activeMenuText)
     {
         if(activeMenuText==='Explore'){
+
+            $('.create-post').hide();
+
             $.ajax({
                 url:'/exploreFriends',
                 method: 'GET',
@@ -1417,6 +1422,14 @@
                     isLoading=false;
                 }
             });
+        }
+        else if(activeMenuText === 'Home'){
+            $('.create-post').show();
+
+            fetchPosts(currentPage);
+        }
+        else if(activeMenuText === 'Notification'){
+            $('.create-post').hide();
         }
     }
 

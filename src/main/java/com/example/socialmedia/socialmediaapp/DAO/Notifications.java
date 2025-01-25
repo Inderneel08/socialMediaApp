@@ -1,9 +1,6 @@
 package com.example.socialmedia.socialmediaapp.DAO;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,10 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "friends")
+@Table(name = "notifications")
 @Getter
 @Setter
-public class Friends {
+public class Notifications {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,14 +24,6 @@ public class Friends {
     @Column(name = "senderId")
     private BigInteger senderId;
 
-    @Column(name = "recieverId")
-    private BigInteger recieverId;
-
-    @Column(name = "current_status")
-    private int current_status;
-
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Timestamp created_at;
-
+    @Column(name = "action")
+    private String action;
 }
