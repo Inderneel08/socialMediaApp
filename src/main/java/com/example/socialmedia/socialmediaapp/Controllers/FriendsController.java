@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.socialmedia.socialmediaapp.DAO.Friends;
 import com.example.socialmedia.socialmediaapp.DAO.ShowUsers;
+import com.example.socialmedia.socialmediaapp.Repositories.FriendRepository;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
+import com.example.socialmedia.socialmediaapp.Service.NotificationServiceDetails;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 @RestController
@@ -27,6 +31,12 @@ public class FriendsController {
 
     @Autowired
     private FriendRequestServiceLayer friendRequestServiceLayer;
+
+    @Autowired
+    private NotificationServiceDetails notificationServiceDetails;
+
+    @Autowired
+    private FriendRepository friendRepository;
 
     @GetMapping("/exploreFriends")
     public Page<ShowUsers> explore(@RequestParam(value = "page") int page) {
@@ -47,6 +57,18 @@ public class FriendsController {
 
         try {
             friendRequestServiceLayer.sendFriendRequest(userDetails.getUserId(), id);
+
+            Friends friends = friendRepository.getFriendsDetails(userDetails.getUserId(), id);
+
+            System.out.println(friends);
+
+            if (friends == null) {
+                System.out.println(1);
+                // notificationServiceDetails.deleteFriendRequestNotification(userDetails.getUserId(), id);
+            } else {
+                System.out.println(2);
+                // notificationServiceDetails.createFriendRequestNotification(userDetails.getUserId(), id);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

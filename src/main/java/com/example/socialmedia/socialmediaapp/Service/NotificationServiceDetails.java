@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
+import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -18,6 +19,10 @@ public class NotificationServiceDetails {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
+    @Transactional
     public void createLikeNotification(BigInteger postId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -28,6 +33,8 @@ public class NotificationServiceDetails {
         notifications.setPostId(postId);
 
         notifications.setSenderId(userDetails.getUserId());
+
+        notifications.setRecieverId(postRepository.getpostsOnPostId(postId).getUserId());
 
         notifications.setAction("LIKED");
 
@@ -40,17 +47,15 @@ public class NotificationServiceDetails {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        notificationRepository.deleteLikeNotification(postId, userDetails.getUserId(), "LIKED");
+        notificationRepository.deleteLikeNotification(postId, userDetails.getUserId(),postRepository.getpostsOnPostId(postId).getUserId(), "LIKED");
     }
 
-    public void createFriendRequestNotification(BigInteger recieverId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    @Transactional
+    public void createFriendRequestNotification(BigInteger senderId,BigInteger recieverId) {
 
         Notifications notifications = new Notifications();
 
-        notifications.setSenderId(userDetails.getUserId());
+        notifications.setSenderId(senderId);
 
         notifications.setRecieverId(recieverId);
 
@@ -60,13 +65,9 @@ public class NotificationServiceDetails {
     }
 
     @Transactional
-    public void deleteFriendRequestNotification(BigInteger recieverId)
-    {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void deleteFriendRequestNotification(BigInteger senderId,BigInteger recieverId) {
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        notificationRepository.deleteFriendRequestNotification(userDetails.getUserId(), recieverId, "REQUESTED");
+        notificationRepository.deleteFriendRequestNotification(senderId, recieverId, "REQUESTED");
     }
 
 }

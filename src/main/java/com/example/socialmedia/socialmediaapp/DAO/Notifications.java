@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+// Likes are done on posts. Friend requests are made by one user to another.
+
 @Entity
 @Table(name = "notifications")
 @Getter

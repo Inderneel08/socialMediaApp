@@ -62,4 +62,6 @@ public interface PostRepository extends JpaRepository<Posts, BigInteger> {
     @Query(value = "UPDATE post set post.likes = post.likes-1 where post.id = :postId", nativeQuery = true)
     void decreaseLikeCount(@Param("postId") BigInteger postId);
 
+    @Query(value = "SELECT * from posts where posts.id = :postId",nativeQuery = true)
+    Posts getpostsOnPostId(@Param("postId") BigInteger postId);
 }

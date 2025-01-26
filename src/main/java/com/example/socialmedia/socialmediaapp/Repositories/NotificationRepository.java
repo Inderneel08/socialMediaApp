@@ -12,12 +12,13 @@ import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 public interface NotificationRepository extends JpaRepository<Notifications, BigInteger> {
 
     @Modifying
-    @Query(value = "DELETE FROM notifications where notifications.postId = :postId and notifications.senderId = :senderId and notifications.action = :action and notifications.seen = 0")
+    @Query(value = "DELETE FROM notifications where notifications.postId = :postId and notifications.senderId = :senderId and notifications.recieverId = :recieverId and notifications.action = :action and notifications.seen = 0", nativeQuery = true)
     void deleteLikeNotification(@Param("postId") BigInteger postId, @Param("senderId") BigInteger senderId,
+            @Param("recieverId") BigInteger recieverId,
             @Param("action") String action);
 
     @Modifying
-    @Query(value = "DELETE FROM notifications where notifications.senderId = :senderId and notifications.recieverId = :recieverId and notifications.action = :action and notifications.seen = 0")
+    @Query(value = "DELETE FROM notifications where notifications.senderId = :senderId and notifications.recieverId = :recieverId and notifications.action = :action and notifications.seen = 0", nativeQuery = true)
     void deleteFriendRequestNotification(@Param("senderId") BigInteger senderId,
             @Param("recieverId") BigInteger recieverId, @Param("action") String action);
 }
