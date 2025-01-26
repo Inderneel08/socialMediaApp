@@ -32,4 +32,7 @@ public class Notifications {
 
     @Column(name = "postId")
     private BigInteger postId;
+
+    @Column(name = "seen")
+    private int seen;
 }

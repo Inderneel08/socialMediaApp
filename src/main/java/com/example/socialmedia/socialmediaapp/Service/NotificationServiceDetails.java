@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class NotificationServiceDetails {
 
@@ -32,6 +34,15 @@ public class NotificationServiceDetails {
         notificationRepository.save(notifications);
     }
 
+    @Transactional
+    public void deleteLikeNotification(BigInteger postId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        notificationRepository.deleteLikeNotification(postId, userDetails.getUserId(), "LIKED");
+    }
+
     public void createFriendRequestNotification(BigInteger recieverId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -46,6 +57,16 @@ public class NotificationServiceDetails {
         notifications.setAction("REQUESTED");
 
         notificationRepository.save(notifications);
+    }
+
+    @Transactional
+    public void deleteFriendRequestNotification(BigInteger recieverId)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        notificationRepository.deleteFriendRequestNotification(userDetails.getUserId(), recieverId, "REQUESTED");
     }
 
 }
