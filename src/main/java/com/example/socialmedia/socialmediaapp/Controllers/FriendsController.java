@@ -60,14 +60,12 @@ public class FriendsController {
 
             Friends friends = friendRepository.getFriendsDetails(userDetails.getUserId(), id);
 
-            System.out.println(friends);
-
             if (friends == null) {
-                System.out.println(1);
-                // notificationServiceDetails.deleteFriendRequestNotification(userDetails.getUserId(), id);
+                notificationServiceDetails.deleteFriendRequestNotification(userDetails.getUserId(),
+                        id);
             } else {
-                System.out.println(2);
-                // notificationServiceDetails.createFriendRequestNotification(userDetails.getUserId(), id);
+                notificationServiceDetails.createFriendRequestNotification(userDetails.getUserId(),
+                        id);
             }
 
         } catch (Exception e) {

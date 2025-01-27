@@ -23,18 +23,16 @@ public class NotificationServiceDetails {
     private PostRepository postRepository;
 
     @Transactional
-    public void createLikeNotification(BigInteger postId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
+    public void createLikeNotification(BigInteger senderId,BigInteger postId) {
         Notifications notifications = new Notifications();
 
         notifications.setPostId(postId);
 
-        notifications.setSenderId(userDetails.getUserId());
+        notifications.setSenderId(senderId);
 
         notifications.setRecieverId(postRepository.getpostsOnPostId(postId).getUserId());
+
+        System.out.println(1);
 
         notifications.setAction("LIKED");
 

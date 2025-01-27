@@ -1,6 +1,9 @@
 package com.example.socialmedia.socialmediaapp.DAO;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,4 +40,8 @@ public class Notifications {
 
     @Column(name = "seen")
     private int seen;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp created_at;
 }

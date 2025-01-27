@@ -264,9 +264,9 @@
                             </i>
                         </span>
                         <h3>Notification</h3>
-                        <!-- ------------- NOTIFICATION POPUP -------------
+                        <!-- ------------- NOTIFICATION POPUP ------------- -->
                         <div class="notifications-popup">
-                            <div>
+                            <!-- <div>
                                 <div class="profile-photo">
                                     <img th:src="@{/images/profile-2.jpg}" alt="profile-2">
                                 </div>
@@ -319,8 +319,8 @@
                                     <b>Jane Doe</b> commented on your post
                                     <small class="text-muted">1 Hour Ago</small>
                                 </div>
-                            </div>
-                        </div> -->
+                            </div> -->
+                        </div>
                         <!--------------- END NOTIFICATION POPUP --------------->
                     </a>
                     <a class="menu-item" id="messages-notifications" onclick="explore(this)">
@@ -1384,11 +1384,11 @@
             $('#feeds').empty();
 
             currentPage=0;
+
+            sidebarText = activeMenuText;
+
+            exploreAllusers(sidebarText);
         }
-
-        sidebarText = activeMenuText;
-
-        exploreAllusers(sidebarText);
     }
 
 
