@@ -30,6 +30,9 @@ public class UserServices {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public String doHash(String email) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -75,6 +78,32 @@ public class UserServices {
         users.setUpdated_at(new Timestamp(System.currentTimeMillis()));
 
         userRepository.save(users);
+    }
+
+    public void resendEmail(String email, HttpServletRequest request) {
+        System.out.println(55555);
+
+        String hashString = "A#197012";
+
+        String appBaseurl = request.getScheme() + "://" + request.getServerName() +
+                ":" + request.getServerPort() + "/";
+
+        String encodedEmail = Base64.getEncoder().encodeToString(email.getBytes());
+
+        String emailVerificationHash = doHash(email);
+
+        String urlHash = doHash(emailVerificationHash + hashString);
+
+        String appUrl = appBaseurl + "validate/" + encodedEmail + "/" + urlHash;
+
+        String subject = "Confirm your email registered to mySocial";
+
+        String emailContent = "<p>Thank you for registering! Please confirm your email by clicking the link below:</p>";
+        emailContent += "<p><a href=\"" + appUrl + "\">Confirm Email</a></p>";
+        emailContent += "<p>If the link doesn't work, copy and paste the following URL into your browser:</p>";
+        emailContent += "<p>" + appUrl + "</p>";
+
+        emailService.sendConfirmationEmail(email, subject, emailContent);
     }
 
     public boolean isEmailRegistered(String email) {

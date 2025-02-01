@@ -70,7 +70,11 @@ public class EmailCaptureFilter extends OncePerRequestFilter {
                 try {
 
                     if (userRepository.findEmail(email).getIs_verified() == 0) {
-                        request.getSession().setAttribute("errorMessage", "Email Id Not Verified");
+                        request.getSession().setAttribute("errorMessage", "Email Id Not Verified a verification link has been sent to this email id to verify the account.");
+
+                        request.getSession().setAttribute("errorCode", 0);
+
+                        request.getSession().setAttribute("email", email);
 
                         response.sendRedirect("login?redirected=true");
                     } else {

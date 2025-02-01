@@ -44,4 +44,9 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     // @Query(value = "SELECT * FROM users where id != :userid", nativeQuery = true)
     @Query(value = "SELECT users.*,CASE WHEN f.senderId = :userid THEN CASE WHEN f.current_status=1 THEN 1 ELSE 0 END ELSE -1 END AS approved from users LEFT JOIN friends as f on users.id=f.recieverId  AND f.senderId = :userid where users.id != :userid ORDER BY users.created_at DESC", nativeQuery = true)
     Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
+
+    // @Modifying
+    // @Query(value = "UPDATE users set users.email_verificationHash = :emailHash where id = :userid", nativeQuery = true)
+    // void updateEmailVerificationHash(@Param("userid") BigInteger userid, @Param("emailHash") String emailHash);
+
 }

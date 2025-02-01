@@ -32,9 +32,6 @@ public class FrontControllers {
     private UserServices userServices;
 
     @Autowired
-    private EmailCaptureFilter emailCaptureFilter;
-
-    @Autowired
     private LogsServiceDetails logsServiceDetails;
 
     @Autowired
@@ -126,7 +123,21 @@ public class FrontControllers {
     public ModelAndView createAccount(@RequestParam(value = "redirected", required = false) boolean redirected,
             HttpServletRequest request) {
 
-        if (!redirected) {
+        if (redirected) {
+
+            if (request.getSession().getAttribute("errorCode").equals(0)) {
+                String email = (String) request.getSession().getAttribute("email");
+
+                userServices.resendEmail(email,request);
+
+                request.removeAttribute("email");
+
+                request.removeAttribute("errorCode");
+            }
+        }
+
+        if (!redirected)
+        {
             request.getSession().removeAttribute("errorMessage");
         }
 

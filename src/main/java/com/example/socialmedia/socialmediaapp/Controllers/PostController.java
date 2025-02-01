@@ -64,7 +64,7 @@ public class PostController {
             if (likes.getAction() == 0) {
                 postServiceDetails.updateLikeStatus(id, userDetails.getUserId());
 
-                notificationServiceDetails.createLikeNotification(userDetails.getUserId(),id);
+                notificationServiceDetails.createLikeNotification(userDetails.getUserId(), id);
 
                 return (ResponseEntity.ok("Success"));
             } else {
@@ -78,7 +78,7 @@ public class PostController {
             postServiceDetails.likePost(id, userDetails.getUserId());
 
             // Create a like notification.
-            notificationServiceDetails.createLikeNotification(userDetails.getUserId(),id);
+            notificationServiceDetails.createLikeNotification(userDetails.getUserId(), id);
         }
 
         return (ResponseEntity.ok("Success"));

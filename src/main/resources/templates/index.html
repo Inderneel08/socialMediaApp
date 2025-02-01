@@ -1430,6 +1430,19 @@
         }
         else if(activeMenuText === 'Notification'){
             $('.create-post').hide();
+
+            $.ajax({
+                url:'/all/notifications',
+                method: 'GET',
+                dataType: 'json',
+                data: {page: currentPage},
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
         }
     }
 

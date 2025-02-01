@@ -21,6 +21,8 @@ public class EmailService {
     public void sendConfirmationEmail(String to, String subject, String text) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
+        System.out.println(77777);
+
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 

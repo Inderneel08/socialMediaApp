@@ -17,12 +17,14 @@ public class NotificationController {
     @Autowired
     private NotificationServiceDetails notificationServiceDetails;
 
+    // Page<Notifications>
     @GetMapping("/all/notifications")
     public Page<Notifications> getNotifications(@RequestParam(value = "page") int page) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
+        return(notificationServiceDetails.getNotifications(pageable));
     }
 
 }
