@@ -44,7 +44,7 @@ public class PostServiceDetails {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        System.out.println("UserId : ->"+ userDetails.getUserId());
+        System.out.println("UserId : ->" + userDetails.getUserId());
 
         Page<Object[]> rawresults = postRepository.findPostsFromLast24Hours(
                 userDetails.getUserId(), pageable);

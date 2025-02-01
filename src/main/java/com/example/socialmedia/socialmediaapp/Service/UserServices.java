@@ -19,6 +19,7 @@ import com.example.socialmedia.socialmediaapp.DAO.ShowPosts;
 import com.example.socialmedia.socialmediaapp.DAO.ShowUsers;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
+import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,9 @@ public class UserServices {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public String doHash(String email) {
         try {
@@ -171,6 +175,11 @@ public class UserServices {
 
             return (users);
         }));
+    }
+
+    public BigInteger getNotificationsCount(BigInteger userid) {
+
+        return (notificationRepository.getCountNotifications(userid));
     }
 
 }

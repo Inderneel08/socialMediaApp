@@ -260,12 +260,12 @@
                     <a class="menu-item"  id="notifications" onclick="explore(this)">
                         <span>
                             <i class="uil uil-bell">
-                                <!-- <small class="notification-count">9+</small> -->
+                                <small class="notification-count" th:text="${notificationCount}"></small>
                             </i>
                         </span>
                         <h3>Notification</h3>
                         <!-- ------------- NOTIFICATION POPUP ------------- -->
-                        <div class="notifications-popup">
+                        <!-- <div class="notifications-popup"> -->
                             <!-- <div>
                                 <div class="profile-photo">
                                     <img th:src="@{/images/profile-2.jpg}" alt="profile-2">
@@ -320,7 +320,7 @@
                                     <small class="text-muted">1 Hour Ago</small>
                                 </div>
                             </div> -->
-                        </div>
+                        <!-- </div> -->
                         <!--------------- END NOTIFICATION POPUP --------------->
                     </a>
                     <a class="menu-item" id="messages-notifications" onclick="explore(this)">
@@ -1257,6 +1257,11 @@
 
                             exploreAllusers(activeMenuText);
                         }
+                        else if(activeMenuText === 'Notification'){
+                            currentPage++;
+
+                            exploreAllusers(activeMenuText);
+                        }
                     }
                 }
 
@@ -1391,6 +1396,65 @@
         }
     }
 
+    function appendNotifications(notifications)
+    {
+        console.log(notifications);
+
+        var notificationsContainer = $('#feeds');
+
+        notifications.forEach(notification => {
+            var notificationText = '';
+
+            if (notification.action === "LIKED") {
+                notificationText = `${notification.first_name} ${notification.last_name} liked your post.`;
+            } else if (notification.action === "REQUESTED") {
+                notificationText = `${notification.first_name} ${notification.last_name} sent you follow request.`;
+            }
+
+            var notificationElement = `
+                <div class="notification">
+                    <div class="notification-content">
+                        <p>
+                            <img src="${notification.image}" class="friend-profile-photo rounded-circle me-2" width="50" height="50">
+                            <small>
+                                ${notificationText} ${timeAgo(notification.created_at)}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            notificationsContainer.append(notificationElement);
+        });
+    }
+
+    function fetchNotifications(page)
+    {
+        $.ajax({
+            url:'/all/notifications',
+            method: 'GET',
+            dataType: 'json',
+            data: {page: currentPage},
+            success: function (data) {
+                if(data && data.size>0){
+                    appendNotifications(data.content);
+
+                    isLoading=false;
+                }
+                else{
+                    console.log("No more notifications to load...");
+
+                    isLoading=true;
+                }
+            },
+            error: function(error){
+                console.log(error);
+
+                isLoading=false;
+            }
+        });
+    }
+
 
     function exploreAllusers(activeMenuText)
     {
@@ -1431,18 +1495,7 @@
         else if(activeMenuText === 'Notification'){
             $('.create-post').hide();
 
-            $.ajax({
-                url:'/all/notifications',
-                method: 'GET',
-                dataType: 'json',
-                data: {page: currentPage},
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+            fetchNotifications(currentPage);
         }
     }
 

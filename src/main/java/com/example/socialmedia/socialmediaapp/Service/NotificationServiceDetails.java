@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import com.example.socialmedia.socialmediaapp.DAO.DisplayNotifications;
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
@@ -74,7 +76,7 @@ public class NotificationServiceDetails {
         }
 
         // Page<Notifications>
-        public Page<Notifications> getNotifications(Pageable pageable) {
+        public Page<DisplayNotifications> getNotifications(Pageable pageable) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
                 CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -86,10 +88,10 @@ public class NotificationServiceDetails {
 
                 // System.out.println(rawresults.getSize());
 
-                List<Notifications> notifications = new ArrayList<>();
+                List<DisplayNotifications> notifications = new ArrayList<>();
 
                 for (Object[] result : rawresults) {
-                        Notifications notifications2 = new Notifications();
+                        DisplayNotifications notifications2 = new DisplayNotifications();
 
                         notifications2.setId(BigInteger.valueOf((Long) result[0]));
 
@@ -106,6 +108,12 @@ public class NotificationServiceDetails {
                         notifications2.setSeen((int) result[5]);
 
                         notifications2.setCreated_at((Timestamp) result[6]);
+
+                        notifications2.setFirst_name((String) result[7]);
+
+                        notifications2.setLast_name((String) result[8]);
+
+                        notifications2.setImage((String) result[9]);
 
                         // System.out.println(result[0] + " " +
                         // result[0].getClass());

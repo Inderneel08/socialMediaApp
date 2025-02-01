@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.socialmedia.socialmediaapp.DAO.DisplayNotifications;
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Service.NotificationServiceDetails;
 
@@ -19,12 +20,12 @@ public class NotificationController {
 
     // Page<Notifications>
     @GetMapping("/all/notifications")
-    public Page<Notifications> getNotifications(@RequestParam(value = "page") int page) {
+    public Page<DisplayNotifications> getNotifications(@RequestParam(value = "page") int page) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        return(notificationServiceDetails.getNotifications(pageable));
+        return (notificationServiceDetails.getNotifications(pageable));
     }
 
 }

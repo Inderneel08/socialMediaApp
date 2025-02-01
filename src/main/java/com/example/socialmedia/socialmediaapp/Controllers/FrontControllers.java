@@ -103,6 +103,8 @@ public class FrontControllers {
 
             model.addAttribute("postContent", postContent);
 
+            model.addAttribute("notificationCount", userServices.getNotificationsCount(userDetails.getUserId()));
+
             model.addAttribute("friendRequests",
                     friendRequestServiceLayer.getAllFriends(userDetails.getUserId()).size());
 
@@ -128,7 +130,7 @@ public class FrontControllers {
             if (request.getSession().getAttribute("errorCode").equals(0)) {
                 String email = (String) request.getSession().getAttribute("email");
 
-                userServices.resendEmail(email,request);
+                userServices.resendEmail(email, request);
 
                 request.removeAttribute("email");
 
@@ -136,8 +138,7 @@ public class FrontControllers {
             }
         }
 
-        if (!redirected)
-        {
+        if (!redirected) {
             request.getSession().removeAttribute("errorMessage");
         }
 
