@@ -17,6 +17,8 @@ import com.example.socialmedia.socialmediaapp.DAO.DisplayNotifications;
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
+import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -24,6 +26,9 @@ public class NotificationServiceDetails {
 
         @Autowired
         private NotificationRepository notificationRepository;
+
+        @Autowired
+        private UserRepository userRepository;
 
         @Autowired
         private PostRepository postRepository;
@@ -37,8 +42,6 @@ public class NotificationServiceDetails {
                 notifications.setSenderId(senderId);
 
                 notifications.setRecieverId(postRepository.getpostsOnPostId(postId).getUserId());
-
-                System.out.println(1);
 
                 notifications.setAction("LIKED");
 
@@ -64,7 +67,12 @@ public class NotificationServiceDetails {
 
                 notifications.setRecieverId(recieverId);
 
-                notifications.setAction("REQUESTED");
+                if(userRepository.findByUserId(recieverId).getProfile_type()==1){
+                        notifications.setAction("REQUESTED");
+                }
+                else{
+                        notifications.setAction("FOLLOWING");
+                }
 
                 notificationRepository.save(notifications);
         }
@@ -134,6 +142,11 @@ public class NotificationServiceDetails {
                 }
 
                 return (new PageImpl<>(notifications, pageable, notifications.size()));
+        }
+
+        @Transactional
+        public void setSeenStatus(List<BigInteger> notifications) {
+                notificationRepository.setSeenStatus(notifications);
         }
 
 }

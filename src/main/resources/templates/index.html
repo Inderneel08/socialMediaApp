@@ -260,7 +260,7 @@
                     <a class="menu-item"  id="notifications" onclick="explore(this)">
                         <span>
                             <i class="uil uil-bell">
-                                <small class="notification-count" th:text="${notificationCount}"></small>
+                                <small class="notification-count" th:if="${notificationCount != 0}" th:text="${notificationCount}"></small>
                             </i>
                         </span>
                         <h3>Notification</h3>
@@ -833,9 +833,9 @@
                     </div>
                 </div>
 
-                <div class="friend-requests">
+                <!-- <div class="friend-requests">
                     <h4>Requests</h4>
-                </div>
+                </div> -->
 
                 <!-- <div class="friend-requests">
                     <h4>Requests</h4>
@@ -897,7 +897,7 @@
                         </div>
                     </div>
                 </div> -->
-                
+
             </div>
             <!----------------- END OF RIGHT -------------------->
         </div>
@@ -1398,9 +1398,26 @@
 
     function appendNotifications(notifications)
     {
-        console.log(notifications);
-
         var notificationsContainer = $('#feeds');
+
+        var indexArray = [];
+
+        notifications.forEach(notification => {
+            indexArray.push(notification.id);
+        });
+
+        $.ajax({
+            url:'/changeSeenStatus',
+            method:'POST',
+            data: { indices: indexArray},
+            success: function(data){
+                console.log(data);
+            },
+            error: function(error){
+                console.error("Failed :", error);
+            }
+        });
+
 
         notifications.forEach(notification => {
             var notificationText = '';

@@ -1,6 +1,7 @@
 package com.example.socialmedia.socialmediaapp.Repositories;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +25,13 @@ public interface NotificationRepository extends JpaRepository<Notifications, Big
         void deleteFriendRequestNotification(@Param("senderId") BigInteger senderId,
                         @Param("recieverId") BigInteger recieverId, @Param("action") String action);
 
-        @Query(value = "SELECT notifications.*,u.first_name,u.last_name,u.profile_photo FROM notifications LEFT JOIN users u on u.id=notifications.senderId where notifications.recieverId= :recieverId ORDER BY notifications.created_at DESC;", nativeQuery = true)
+        @Query(value = "SELECT notifications.*,u.first_name,u.last_name,u.profile_photo FROM notifications LEFT JOIN users u on u.id=notifications.senderId where notifications.recieverId= :recieverId ORDER BY notifications.created_at DESC", nativeQuery = true)
         Page<Object[]> getNotifications(@Param("recieverId") BigInteger recieverId, Pageable pageable);
 
         @Query(value = "SELECT COUNT(*) from notifications where notifications.recieverId = :recieverId and notifications.seen=0", nativeQuery = true)
         BigInteger getCountNotifications(@Param("recieverId") BigInteger recieverId);
+
+        @Modifying
+        @Query(value = "UPDATE notifications set notifications.seen = 1 where notifications.id IN (:notifications)", nativeQuery = true)
+        void setSeenStatus(@Param("notifications") List<BigInteger> notifications);
 }

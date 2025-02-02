@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.Friends;
 import com.example.socialmedia.socialmediaapp.Repositories.FriendRepository;
+import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -13,6 +15,9 @@ public class FriendRequestServiceLayer {
 
     @Autowired
     private FriendRepository friendRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Friends> getAllFriends(BigInteger userid) {
         return (friendRepository.getMyFriends(userid));
@@ -29,7 +34,11 @@ public class FriendRequestServiceLayer {
 
             friends.setRecieverId(receiverId);
 
-            friends.setCurrent_status(0);
+            if (userRepository.findByUserId(receiverId).getProfile_type() == 1) {
+                friends.setCurrent_status(0);
+            } else {
+                friends.setCurrent_status(1);
+            }
 
             friendRepository.save(friends);
         } else {

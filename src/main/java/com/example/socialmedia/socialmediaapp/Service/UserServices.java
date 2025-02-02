@@ -171,6 +171,8 @@ public class UserServices {
 
             users.setProfile_photo((String) result[17]);
 
+            users.setProfile_type((Integer) result[19]);
+
             users.setApproved((Integer) result[20]);
 
             return (users);

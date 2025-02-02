@@ -46,7 +46,12 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
 
     // @Modifying
-    // @Query(value = "UPDATE users set users.email_verificationHash = :emailHash where id = :userid", nativeQuery = true)
-    // void updateEmailVerificationHash(@Param("userid") BigInteger userid, @Param("emailHash") String emailHash);
+    // @Query(value = "UPDATE users set users.email_verificationHash = :emailHash
+    // where id = :userid", nativeQuery = true)
+    // void updateEmailVerificationHash(@Param("userid") BigInteger userid,
+    // @Param("emailHash") String emailHash);
+
+    @Query(value = "SELECT * FROM users where users.id = :userid",nativeQuery = true)
+    Users findByUserId(@Param("userid") BigInteger userid);
 
 }
