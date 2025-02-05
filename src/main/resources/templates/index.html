@@ -763,14 +763,14 @@
 
 
                     <div class="category">
-                        <h6 class="active">Primary</h6>
-                        <h6>General</h6>
-                        <h6 class="message-requests" style="cursor: pointer;" id="requests_friend">
+                        <h6 class="active">Messages</h6>
+                        <!-- <h6>General</h6> -->
+                        <!-- <h6 class="message-requests" style="cursor: pointer;" id="requests_friend">
                             Requests (<span th:text="${friendRequests}"></span>)
-                        </h6>
+                        </h6> -->
                     </div>
 
-                    <div class="message">
+                    <!-- <div class="message">
                         <div class="profile-photo">
                             <img th:src="@{/images/profile-17.jpg}" alt="profile-17">
                         </div>
@@ -830,7 +830,7 @@
                             <h5>Benjamin Dwayne</h5>
                             <p class="text-muted">haha got that!</p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- <div class="friend-requests">
@@ -1070,16 +1070,16 @@
 
             if (friend.approved == -1) {
                 buttonsContainer.append(`
-                    <a class="btn btn-primary add-friend-btn" id="add-friend-${friend.id}">Follow</a>
+                    <a class="btn btn-primary add-friend-btn" data-profile-type="${friend.profile_type}" id="add-friend-${friend.id}">Follow</a>
                 `);
             } else if (friend.approved == 0) {
                 buttonsContainer.append(`
-                    <a class="btn btn-primary add-friend-btn requested" id="add-friend-${friend.id}">Requested</a>
+                    <a class="btn btn-primary add-friend-btn requested" data-profile-type="${friend.profile_type}" id="add-friend-${friend.id}">Requested</a>
                 `);
             }
             else if(friend.approved == 1){
                 buttonsContainer.append(`
-                    <a class="btn btn-primary add-friend-btn unfollow" id="add-friend-${friend.id}">UnFollow</a>
+                    <a class="btn btn-primary add-friend-btn unfollow" data-profile-type="${friend.profile_type}" id="add-friend-${friend.id}">UnFollow</a>
                 `);
             }
 
@@ -1346,10 +1346,24 @@
 
                 event.target.classList.remove("requested");
             }
-            else{
-                event.target.textContent = "Requested";
+            else if(event.target.textContent=="UnFollow"){
+                event.target.textContent="Follow";
 
-                event.target.classList.add("requested");
+                event.target.classList.remove("unfollow");
+            }
+            else{
+                var profileType = event.target.getAttribute('data-profile-type');
+
+                if(profileType=="0"){
+                    event.target.textContent = "UnFollow";
+
+                    event.target.classList.add("unfollow");
+                }
+                else{
+                    event.target.textContent = "Requested";
+
+                    event.target.classList.add("requested");
+                }
             }
         }
 
@@ -1420,6 +1434,8 @@
 
 
         notifications.forEach(notification => {
+            console.log(notification);
+
             var notificationText = '';
 
             if (notification.action === "LIKED") {
@@ -1427,14 +1443,21 @@
             } else if (notification.action === "REQUESTED") {
                 notificationText = `${notification.first_name} ${notification.last_name} sent you follow request.`;
             }
+            else if(notification.action === "FOLLOWING"){
+                notificationText = `${notification.first_name} ${notification.last_name} started following you.`;
+            }
 
             var notificationElement = `
-                <div class="notification">
+                <div class="notification-${notification.id}">
                     <div class="notification-content">
                         <p>
                             <img src="${notification.image}" class="friend-profile-photo rounded-circle me-2" width="50" height="50">
                             <small>
                                 ${notificationText} ${timeAgo(notification.created_at)}
+                                ${notification.action==="REQUESTED" ?
+                                    `<a class="btn btn-primary acceptButton" style="color:white;" data-reciever-id="${notification.recieverId}" data-notification-id="${notification.id}" data-sender-id="${notification.senderId}">Accept</a>
+                                    <a class="btn btn-danger declineButton" style="color:white;" data-reciever-id="${notification.recieverId}" data-notification-id="${notification.id}" data-sender-id="${notification.senderId}">Decline</a>`
+                                 : ""}
                             </small>
                         </p>
                     </div>
@@ -1442,6 +1465,46 @@
             `;
 
             notificationsContainer.append(notificationElement);
+        });
+
+        $('.acceptButton').on('click',function(){
+            var senderId = event.target.getAttribute("data-sender-id");
+
+            var recieverId = event.target.getAttribute("data-reciever-id");
+
+            var notificationId = event.target.getAttribute("data-notification-id");
+
+            $.ajax({
+                url:'/accept-friend-request',
+                method:'POST',
+                data: { senderId: senderId , recieverId: recieverId},
+                success: function(data){
+                    document.querySelector(`.notification-${notificationId}`).classList.add('hiddenAction');
+                },
+                error: function(error){
+                    console.error("Failed :", error);
+                }
+            });
+        });
+
+        $('.declineButton').on('click',function(){
+            var senderId = event.target.getAttribute("data-sender-id");
+
+            var recieverId = event.target.getAttribute("data-reciever-id");
+
+            var notificationId = event.target.getAttribute("data-notification-id");
+
+            $.ajax({
+                url:'/delete-notification',
+                method:'POST',
+                data: { senderId: senderId , recieverId: recieverId},
+                success: function(data){
+                    document.querySelector(`.notification-${notificationId}`).classList.add('hiddenAction');
+                },
+                error: function(error){
+                    console.error("Failed :", error);
+                }
+            });
         });
     }
 

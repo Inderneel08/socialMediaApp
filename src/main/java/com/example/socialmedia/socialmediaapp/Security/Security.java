@@ -38,7 +38,7 @@ public class Security {
                                 .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial",
                                                 "/upload-profile-photo",
                                                 "/postComment", "/changeMyPassword", "/exploreFriends",
-                                                "/perform-like-unlike", "/sendFriendRequest")
+                                                "/perform-like-unlike", "/sendFriendRequest", "/delete-notification","/accept-friend-request")
                                 .hasAuthority("ROLE_USER")
                                 .anyRequest().authenticated()
                                 .and().formLogin().loginPage("/login")

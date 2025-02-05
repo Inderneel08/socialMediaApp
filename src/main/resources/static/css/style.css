@@ -864,3 +864,6 @@ li button {
     background-color: white;
 }
 
+.hiddenAction {
+    display: none;
+}

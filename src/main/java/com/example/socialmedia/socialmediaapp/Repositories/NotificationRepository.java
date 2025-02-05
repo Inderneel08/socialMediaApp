@@ -25,6 +25,11 @@ public interface NotificationRepository extends JpaRepository<Notifications, Big
         void deleteFriendRequestNotification(@Param("senderId") BigInteger senderId,
                         @Param("recieverId") BigInteger recieverId, @Param("action") String action);
 
+        @Modifying
+        @Query(value = "DELETE FROM notifications where notifications.senderId = :senderId and notifications.recieverId = :recieverId and notifications.action = :action and notifications.seen = 1", nativeQuery = true)
+        void declineFriendRequest(@Param("senderId") BigInteger senderId,
+                        @Param("recieverId") BigInteger recieverId, @Param("action") String action);
+
         @Query(value = "SELECT notifications.*,u.first_name,u.last_name,u.profile_photo FROM notifications LEFT JOIN users u on u.id=notifications.senderId where notifications.recieverId= :recieverId ORDER BY notifications.created_at DESC", nativeQuery = true)
         Page<Object[]> getNotifications(@Param("recieverId") BigInteger recieverId, Pageable pageable);
 
@@ -34,4 +39,9 @@ public interface NotificationRepository extends JpaRepository<Notifications, Big
         @Modifying
         @Query(value = "UPDATE notifications set notifications.seen = 1 where notifications.id IN (:notifications)", nativeQuery = true)
         void setSeenStatus(@Param("notifications") List<BigInteger> notifications);
+
+        @Modifying
+        @Query(value = "UPDATE notifications set notifications.action = :action where notifications.senderId = :senderId and notifications.recieverId = :recieverId and notifications.seen=1", nativeQuery = true)
+        void acceptFriendRequest(@Param("senderId") BigInteger senderId,
+                        @Param("recieverId") BigInteger recieverId, @Param("action") String action);
 }

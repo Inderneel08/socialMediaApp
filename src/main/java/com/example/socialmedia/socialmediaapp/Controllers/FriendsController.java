@@ -77,4 +77,13 @@ public class FriendsController {
         return (ResponseEntity.ok("Success"));
     }
 
+    @PostMapping("/accept-friend-request")
+    public ResponseEntity<?> acceptFriendRequest(@RequestParam(value = "senderId") BigInteger senderId,
+            @RequestParam(value = "recieverId") BigInteger recieverId) {
+        
+        friendRequestServiceLayer.updateFriendshipStatus(senderId, recieverId);
+
+        return (ResponseEntity.ok().build());
+    }
+
 }

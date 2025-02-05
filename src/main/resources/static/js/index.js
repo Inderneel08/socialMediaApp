@@ -39,7 +39,12 @@ menuItems.forEach(item => {
             // document.querySelector('.notifications-popup').style.display = 'none';
         } else {
             // document.querySelector('.notifications-popup').style.display = 'block';
-            document.querySelector('#notifications .notification-count').style.display = 'none';
+            
+            var notificationCount  = document.querySelector('#notifications .notification-count');
+
+            if(notificationCount!==null){
+               notificationCount.style.display = 'none';
+            }
         }
     })
 })

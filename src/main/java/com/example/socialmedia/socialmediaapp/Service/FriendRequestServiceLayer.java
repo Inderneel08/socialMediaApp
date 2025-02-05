@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.Friends;
+import com.example.socialmedia.socialmediaapp.DAO.MyFriends;
 import com.example.socialmedia.socialmediaapp.Repositories.FriendRepository;
+import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -19,7 +21,10 @@ public class FriendRequestServiceLayer {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Friends> getAllFriends(BigInteger userid) {
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    public List<MyFriends> getAllFriends(BigInteger userid) {
         return (friendRepository.getMyFriends(userid));
     }
 
@@ -48,6 +53,17 @@ public class FriendRequestServiceLayer {
             // followed the other. In both cases we should delete the mapping.
 
             friendRepository.deleteAssociation(senderId, receiverId);
+        }
+    }
+
+    @Transactional
+    public void updateFriendshipStatus(BigInteger senderId, BigInteger receiverId) {
+        try {
+            friendRepository.addFriendship(senderId, receiverId);
+
+            notificationRepository.acceptFriendRequest(senderId, receiverId, "FOLLOWING");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

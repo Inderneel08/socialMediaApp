@@ -67,10 +67,9 @@ public class NotificationServiceDetails {
 
                 notifications.setRecieverId(recieverId);
 
-                if(userRepository.findByUserId(recieverId).getProfile_type()==1){
+                if (userRepository.findByUserId(recieverId).getProfile_type() == 1) {
                         notifications.setAction("REQUESTED");
-                }
-                else{
+                } else {
                         notifications.setAction("FOLLOWING");
                 }
 
@@ -81,6 +80,12 @@ public class NotificationServiceDetails {
         public void deleteFriendRequestNotification(BigInteger senderId, BigInteger recieverId) {
 
                 notificationRepository.deleteFriendRequestNotification(senderId, recieverId, "REQUESTED");
+        }
+
+        @Transactional
+        public void declineFriendRequest(BigInteger senderId, BigInteger recieverId)
+        {
+                notificationRepository.declineFriendRequest(senderId, recieverId, "REQUESTED");
         }
 
         // Page<Notifications>

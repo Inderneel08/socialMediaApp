@@ -106,7 +106,7 @@ public class FrontControllers {
             model.addAttribute("notificationCount", userServices.getNotificationsCount(userDetails.getUserId()));
 
             model.addAttribute("friendRequests",
-                    friendRequestServiceLayer.getAllFriends(userDetails.getUserId()).size());
+                    friendRequestServiceLayer.getAllFriends(userDetails.getUserId()));
 
             if (!redirected) {
                 request.getSession().removeAttribute("successMessage");
