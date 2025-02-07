@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,13 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import com.example.socialmedia.socialmediaapp.DAO.DisplayNotifications;
 import com.example.socialmedia.socialmediaapp.DAO.Notifications;
 import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.PostRepository;
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
-
 import jakarta.transaction.Transactional;
 
 @Service
