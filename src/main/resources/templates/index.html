@@ -832,7 +832,7 @@
                         </div>
                     </div> -->
 
-                    <div th:each="friend : ${friendRequests}" class="message" style="cursor: pointer;">
+                    <!-- <div th:each="friend : ${friendRequests}" class="message" style="cursor: pointer;">
                         <div class="profile-photo">
                             <img th:src="@{${friend.profile_photo}}" th:alt="'profile-' + ${friend.first_name} + '_' + ${friend.last_name}">
                         </div>
@@ -841,9 +841,11 @@
                             <h5 th:text="${friend.first_name} + ' ' + ${friend.last_name}"></h5>
 
                             <p class="text-muted">Hello</p>
-                            <!-- th:text="${friend.last_name}" -->
                         </div>
-                    </div>
+                    </div> -->
+
+                    <div class="messages-container" style="cursor: pointer;"></div>
+
                 </div>
 
                 <!-- <div class="friend-requests">
@@ -979,6 +981,56 @@
     <script th:src="@{/js/index.js}"></script>
 </body>
 
+
+<style>
+    .messages-container {
+        max-height: 300px; /* Adjust height to fit ~5 messages */
+        overflow-y: auto;  /* Enables vertical scrolling */
+        scrollbar-width: thin; /* Firefox scrollbar */
+        scrollbar-color: #ccc #f0f0f0; /* Custom scrollbar color */
+        padding: 10px;
+    }
+
+    /* Custom scrollbar for Webkit browsers (Chrome, Edge, Safari) */
+    .messages-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .messages-container::-webkit-scrollbar-thumb {
+        background-color: #aaa;
+        border-radius: 10px;
+    }
+
+    .messages-container::-webkit-scrollbar-track {
+        background: #f0f0f0;
+    }
+
+    .message {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .profile-photo img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .message-body h5 {
+        margin: 0;
+        font-size: 14px;
+    }
+
+    .text-bold {
+        font-weight: bold;
+        color: #333;
+    }
+</style>
+
+
 <script>
     var sidebarText = 'Home';
 
@@ -1002,7 +1054,6 @@
         }
     });
 </script>
-
 
 <script>
 
@@ -1281,6 +1332,90 @@
                 previousScrollTop = currentScrollTop;
             }
         });
+    });
+
+</script>
+
+<script>
+
+    let scrollPage=0;
+
+    let lastmessage='';
+
+    function appendContacts(messages)
+    {
+        let messagesContainer = $('.messages-container');
+
+        var currentMessage = $('#message-search').val();
+
+        if(lastmessage!==currentMessage){
+            scrollPage=0;
+
+            lastmessage=currentMessage;
+
+            messagesContainer.empty();
+        }
+
+        messages.forEach(msg => {
+            let messageHtml = `
+                <div class="message">
+                    <div class="profile-photo">
+                        <img src="${msg.profile_photo}" alt="profile-${msg.first_name} ${msg.last_name}">
+                    </div>
+                    <div class="message-body">
+                        <h5>${msg.first_name} ${msg.last_name}</h5>
+                        <p class="text-bold"></p>
+                    </div>
+                </div>
+            `;
+            messagesContainer.append(messageHtml);
+        });
+    }
+
+    function fetchMessages()
+    {
+        var message = $('#message-search').val();
+
+        $.ajax({
+            url: '/fetchMessages',
+            method: 'GET',
+            dataType: 'json',
+            data: {page: scrollPage,message: message},
+            success: function (data) {
+
+                if(data && data.size>0){
+                    appendContacts(data.content);
+                }
+                else{
+                    console.log("No more posts to load...");
+                }
+            },
+            error: function (error) {
+                console.error("Failed to fetch posts:", error);
+            }
+        });
+    }
+
+
+    $('#message-search').on('input',function(){
+        fetchMessages();
+    });
+
+
+    $('.messages-container').on('scroll',function(){
+        var container = $(this);
+
+        var scrollHeight = container[0].scrollHeight;
+
+        var scrollTop = container.scrollTop();
+
+        var containerHeight = container.outerHeight();
+
+        if (scrollTop + containerHeight >= scrollHeight - 10) {
+            scrollPage++;
+
+            fetchMessages();
+        }
     });
 
 </script>

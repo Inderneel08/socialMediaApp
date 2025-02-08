@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.socialmedia.socialmediaapp.DAO.Friends;
+import com.example.socialmedia.socialmediaapp.DAO.MyFriends;
 import com.example.socialmedia.socialmediaapp.DAO.ShowUsers;
 import com.example.socialmedia.socialmediaapp.Repositories.FriendRepository;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
@@ -47,6 +48,16 @@ public class FriendsController {
         Pageable pageable = PageRequest.of(page, size);
 
         return (userServices.getAllUsers(pageable));
+    }
+
+    @GetMapping("/fetchMessages")
+    public Page<MyFriends> fetchMessages(@RequestParam(value = "page") int page,@RequestParam(value = "message") String message)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return(friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), page,message));
     }
 
     @PostMapping("/sendFriendRequest")

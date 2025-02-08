@@ -3,6 +3,8 @@ package com.example.socialmedia.socialmediaapp.Service;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.Friends;
@@ -28,30 +30,34 @@ public class FriendRequestServiceLayer {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    public Page<MyFriends> getAllFriends(BigInteger userid, int page) {
+    private MyFriends mapToMyFriends(Object[] result) {
+        MyFriends friend = new MyFriends();
+        friend.setFirst_name((String) result[0]);
+        friend.setLast_name((String) result[1]);
+        friend.setProfile_photo((String) result[2]);
+        return friend;
+    }
+
+    public Page<MyFriends> getAllFriends(BigInteger userid, int page,String message) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Object[]> rawresults = friendRepository.getMyFriends(userid, pageable);
+        System.out.println("Message ->"+ message);
+
+        Page<Object[]> rawresults = friendRepository.getWhoIFollow(userid, pageable,message);
+
+        Page<Object[]> rawresults2 = friendRepository.getWhoFollowMe(userid, pageable, message);
 
         List<MyFriends> friends = new ArrayList<>();
 
-        for (Object[] result : rawresults) {
-            MyFriends friends2 = new MyFriends();
+        rawresults.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
 
-            friends2.setFirst_name((String) result[0]);
+        rawresults2.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
 
-            friends2.setLast_name((String) result[1]);
+        long totalElements = rawresults.getTotalElements() + rawresults2.getTotalElements();
 
-            friends2.setProfile_photo((String) result[2]);
-
-            friends.add(friends2);
-        }
-
-        System.out.println(friends);
-
-        return (new PageImpl<>(friends, pageable, friends.size()));
+        return (new PageImpl<>(friends, pageable, totalElements));
     }
 
     @Transactional

@@ -29,16 +29,17 @@ public class Security {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf().disable().authorizeHttpRequests()
                                 .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
-                                                "/fonts/**")
+                                                "/fonts/**", "/validate/**")
                                 .permitAll()
-                                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/validate/**", "/login",
+                                .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/login",
                                                 "/forgot-password", "/change-password", "/showPassword/**",
                                                 "/set-password")
                                 .anonymous()
                                 .requestMatchers("/home", "/view-profile", "/update-profile", "/posts/initial",
                                                 "/upload-profile-photo",
                                                 "/postComment", "/changeMyPassword", "/exploreFriends",
-                                                "/perform-like-unlike", "/sendFriendRequest", "/delete-notification","/accept-friend-request")
+                                                "/perform-like-unlike", "/sendFriendRequest", "/delete-notification",
+                                                "/accept-friend-request", "/fetchMessages")
                                 .hasAuthority("ROLE_USER")
                                 .anyRequest().authenticated()
                                 .and().formLogin().loginPage("/login")

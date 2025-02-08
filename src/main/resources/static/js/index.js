@@ -52,25 +52,25 @@ menuItems.forEach(item => {
 // ============== MESSAGES ============== 
 
 //Searches messages
-const searchMessage = () => {
-    if(messageSearch!=null){
-        const val = messageSearch.value.toLowerCase();
-        message.forEach(user => {
-            let name = user.querySelector('h5').textContent.toLowerCase();
-            if(name.indexOf(val) != -1) {
-                user.style.display = 'flex'; 
-            } else {
-                user.style.display = 'none';
-            }
-        })
-    }
-}
+// const searchMessage = () => {
+//     if(messageSearch!=null){
+//         const val = messageSearch.value.toLowerCase();
+//         message.forEach(user => {
+//             let name = user.querySelector('h5').textContent.toLowerCase();
+//             if(name.indexOf(val) != -1) {
+//                 user.style.display = 'flex'; 
+//             } else {
+//                 user.style.display = 'none';
+//             }
+//         })
+//     }
+// }
 
 //Search for messages
 
-if(messageSearch!=null){
-    messageSearch.addEventListener('keyup', searchMessage);
-}
+// if(messageSearch!=null){
+//     messageSearch.addEventListener('keyup', searchMessage);
+// }
 
 
 //Highlight messages card when messages menu item is clicked
