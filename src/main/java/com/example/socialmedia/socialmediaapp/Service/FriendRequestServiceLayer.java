@@ -32,20 +32,22 @@ public class FriendRequestServiceLayer {
 
     private MyFriends mapToMyFriends(Object[] result) {
         MyFriends friend = new MyFriends();
-        friend.setFirst_name((String) result[0]);
-        friend.setLast_name((String) result[1]);
-        friend.setProfile_photo((String) result[2]);
+
+        friend.setId(BigInteger.valueOf((Long) result[0]));
+        friend.setFirst_name((String) result[1]);
+        friend.setLast_name((String) result[2]);
+        friend.setProfile_photo((String) result[3]);
         return friend;
     }
 
-    public Page<MyFriends> getAllFriends(BigInteger userid, int page,String message) {
+    public Page<MyFriends> getAllFriends(BigInteger userid, int page, String message) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        System.out.println("Message ->"+ message);
+        System.out.println("Message ->" + message);
 
-        Page<Object[]> rawresults = friendRepository.getWhoIFollow(userid, pageable,message);
+        Page<Object[]> rawresults = friendRepository.getWhoIFollow(userid, pageable, message);
 
         Page<Object[]> rawresults2 = friendRepository.getWhoFollowMe(userid, pageable, message);
 
