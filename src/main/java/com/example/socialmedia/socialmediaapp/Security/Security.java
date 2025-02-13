@@ -29,7 +29,7 @@ public class Security {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf().disable().authorizeHttpRequests()
                                 .requestMatchers("/css/**", "/js/**", "/images/**", "/vendor/**",
-                                                "/fonts/**", "/validate/**")
+                                                "/fonts/**", "/validate/**","/websocket/**")
                                 .permitAll()
                                 .requestMatchers("/", "/signup", "/do-signup", "/do-login", "/login",
                                                 "/forgot-password", "/change-password", "/showPassword/**",
