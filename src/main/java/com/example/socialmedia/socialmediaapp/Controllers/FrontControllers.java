@@ -105,6 +105,8 @@ public class FrontControllers {
 
             model.addAttribute("notificationCount", userServices.getNotificationsCount(userDetails.getUserId()));
 
+            model.addAttribute("userId", userDetails.getUserId());
+
             // model.addAttribute("friendRequests",
             // friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), 0));
 

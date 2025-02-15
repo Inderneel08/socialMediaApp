@@ -228,6 +228,8 @@
                     Login
                 </a>
 
+                <!-- <pre th:text="${userId}"></pre> -->
+
                 <a class="btn btn-primary me-3" th:href="@{/signup}" th:if="${#authorization.expression('isAnonymous()')}">
                     Signup
                 </a>
@@ -889,13 +891,17 @@
 
                     <div class="chatbox" id="chatbox">
                         <div class="chatbox-header" id="chatTitle" style="display: flex; justify-content: space-between;">
+                            <img src="" id="profiles-images" class="profile-photo" alt="profilesss" style="display: inline-block;">
                             <p id="chatMessages"></p>
 
                             <button class="close-btn" id="closeChat">&times;</button>
                         </div>
+
+                        <div id="chatbox-messages" class="chat-messages"></div>
+
                         <div class="input-area">
                             <input type="text" id="messageInput" placeholder="Type a message...">
-                            <button onclick="sendMessage()">Send</button>
+                            <button id="messageSendButton">Send</button>
                         </div>
                     </div>
 
@@ -1407,13 +1413,13 @@
         if(messages.length!==0){
             messages.forEach(msg => {
                 let messageHtml = `
-                    <div class="message" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}">
-                        <div class="profile-photo" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}">
-                            <img src="${msg.profile_photo}" alt="profile-${msg.first_name} ${msg.last_name}" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}">
+                    <div class="message" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
+                        <div class="profile-photo" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
+                            <img src="${msg.profile_photo}" alt="profile-${msg.first_name} ${msg.last_name}" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                         </div>
-                        <div class="message-body" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}">
-                            <h5 data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}">${msg.first_name} ${msg.last_name}</h5>
-                            <p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}"></p>
+                        <div class="message-body" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
+                            <h5 data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">${msg.first_name} ${msg.last_name}</h5>
+                            <p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"></p>
                         </div>
                     </div>
                 `;
@@ -1422,9 +1428,26 @@
 
             $('.message').on('click',function(event){
 
-                console.log(event.target.getAttribute('data-name-id'));
+                var messageId = BigInt(event.target.getAttribute('data-message-id'));
+
+                var userId = BigInt([[${userId}]]);
+
+                // console.log(userId);
+
+                // console.log(messageId);
 
                 document.getElementById('chatMessages').innerHTML=event.target.getAttribute('data-name-id');
+
+                document.getElementById('profiles-images').src=event.target.getAttribute('data-src-id');
+
+                document.getElementById('messageSendButton').setAttribute('data-name',event.target.getAttribute('data-name-id'));
+
+                document.getElementById('messageSendButton').setAttribute('data-img',event.target.getAttribute('data-src-id'));
+
+                // Once clicked now activate websocket connection.
+
+                disconnect();
+                startConnection(userId,messageId);
 
                 $('#chatbox').show();
             });
@@ -1800,20 +1823,76 @@
 
 
 <script>
+
+    let senderIdGlobal=null,recieverIdGlobal=null;
+
     const stompClient = new StompJs.Client({
         brokerURL: 'ws://localhost:8080/websocket'
     });
 
+    function startConnection(senderId,recieverId)
+    {
+        var chatRoomId = (senderId < recieverId) ? senderId+'_'+recieverId : recieverId+'_'+senderId;
 
-    stompClient.onConnect = (frame) => {
-        console.log('Connected: ' + frame);
-        // stompClient.subscribe('/topic/greetings', (greeting) => {
-        //     showGreeting(JSON.parse(greeting.body).content);
-        // });
-    };
+        senderIdGlobal=senderId;
 
-    stompClient.activate();
+        recieverIdGlobal=recieverId;
 
+        var chatEndpoint = `/private/${chatRoomId}`;
+
+        stompClient.onConnect = (frame) => {
+            console.log('Connected: ' + frame);
+
+            stompClient.subscribe(chatEndpoint, (message) => {
+                var decodedMessage = new TextDecoder().decode(message._binaryBody);
+
+                displayMessage(decodedMessage);
+            });
+        };
+
+        stompClient.activate();
+    }
+
+    function displayMessage(message)
+    {
+        let chatboxMessages = document.getElementById("chatbox-messages");
+
+        let messageElement = document.createElement("p");
+
+        messageElement.textContent = message;
+
+        messageElement.classList.add("chat-message");
+
+        chatboxMessages.appendChild(messageElement);
+
+        chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+    }
+
+    function disconnect()
+    {
+        if (stompClient && stompClient.connected) {
+            senderIdGlobal=null;
+
+            recieverIdGlobal=null;
+
+            stompClient.deactivate().then(() => {
+                console.log("Disconnected");
+            });
+        }
+    }
+
+    $('#messageSendButton').on('click',function(){
+        var message = $('#messageInput').val();
+
+        var chatRoomId = (senderIdGlobal < recieverIdGlobal) ? senderIdGlobal+'_'+recieverIdGlobal : recieverIdGlobal+'_'+senderIdGlobal;
+
+        var destinationUrl = `/app/sendMessage/${chatRoomId}`;
+
+        stompClient.publish({
+            destination: destinationUrl,
+            body: message
+        });
+    });
 
 </script>
 
