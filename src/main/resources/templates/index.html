@@ -1844,9 +1844,11 @@
             console.log('Connected: ' + frame);
 
             stompClient.subscribe(chatEndpoint, (message) => {
-                var decodedMessage = new TextDecoder().decode(message._binaryBody);
+                // console.log(message);
 
-                displayMessage(decodedMessage);
+                var decodedMessage = JSON.parse(new TextDecoder().decode(message._binaryBody));
+
+                displayMessage(decodedMessage.message);
             });
         };
 
@@ -1888,11 +1890,11 @@
 
         var destinationUrl = `/app/sendMessage/${chatRoomId}`;
 
-        var userId = BigInt([[${userId}]]);
+        // var userId = BigInt([[${userId}]]);
 
         stompClient.publish({
             destination: destinationUrl,
-            body: JSON.stringify({ message: message, userId: userId.toString() })
+            body: JSON.stringify({ message: message, senderId: senderIdGlobal.toString(), recieverId: recieverIdGlobal.toString() })
         });
     });
 
