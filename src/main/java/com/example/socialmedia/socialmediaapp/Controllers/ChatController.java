@@ -5,6 +5,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.example.socialmedia.socialmediaapp.DAO.ChatMessage;
+
 @Controller
 public class ChatController {
 
@@ -15,9 +17,11 @@ public class ChatController {
     }
 
     @MessageMapping("/sendMessage/{chatRoomId}")
-    public void sendMessage(@DestinationVariable String chatRoomId, String message) {
+    public void sendMessage(@DestinationVariable String chatRoomId, ChatMessage chatMessage) {
 
-        messagingTemplate.convertAndSend("/private/" + chatRoomId, message);
+        System.out.println(chatMessage.getMessage());
+
+        messagingTemplate.convertAndSend("/private/" + chatRoomId, chatMessage);
     }
 
 }

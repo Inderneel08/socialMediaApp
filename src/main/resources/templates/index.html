@@ -1440,7 +1440,7 @@
 
                 document.getElementById('profiles-images').src=event.target.getAttribute('data-src-id');
 
-                document.getElementById('messageSendButton').setAttribute('data-name',event.target.getAttribute('data-name-id'));
+                // document.getElementById('messageSendButton').setAttribute('data-name',event.target.getAttribute('data-name-id'));
 
                 document.getElementById('messageSendButton').setAttribute('data-img',event.target.getAttribute('data-src-id'));
 
@@ -1888,9 +1888,11 @@
 
         var destinationUrl = `/app/sendMessage/${chatRoomId}`;
 
+        var userId = BigInt([[${userId}]]);
+
         stompClient.publish({
             destination: destinationUrl,
-            body: message
+            body: JSON.stringify({ message: message, userId: userId.toString() })
         });
     });
 

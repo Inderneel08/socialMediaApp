@@ -51,13 +51,15 @@ public class FriendsController {
     }
 
     @GetMapping("/fetchMessages")
-    public Page<MyFriends> fetchMessages(@RequestParam(value = "page") int page,@RequestParam(value = "message") String message)
-    {
+    public Page<MyFriends> fetchMessages(@RequestParam(value = "page") int page,
+            @RequestParam(value = "message") String message) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        return(friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), page,message));
+        System.out.println(userDetails.getUserId());
+
+        return (friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), page, message));
     }
 
     @PostMapping("/sendFriendRequest")
@@ -91,7 +93,7 @@ public class FriendsController {
     @PostMapping("/accept-friend-request")
     public ResponseEntity<?> acceptFriendRequest(@RequestParam(value = "senderId") BigInteger senderId,
             @RequestParam(value = "recieverId") BigInteger recieverId) {
-        
+
         friendRequestServiceLayer.updateFriendshipStatus(senderId, recieverId);
 
         return (ResponseEntity.ok().build());

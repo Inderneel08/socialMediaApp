@@ -39,7 +39,8 @@ public class Security {
                                                 "/upload-profile-photo",
                                                 "/postComment", "/changeMyPassword", "/exploreFriends",
                                                 "/perform-like-unlike", "/sendFriendRequest", "/delete-notification",
-                                                "/accept-friend-request", "/fetchMessages","/private/**","/app/sendMessage/**",
+                                                "/accept-friend-request", "/fetchMessages", "/private/**",
+                                                "/app/sendMessage/**",
                                                 "/websocket/**")
                                 .hasAuthority("ROLE_USER")
                                 .anyRequest().authenticated()
