@@ -20,7 +20,7 @@ public class ShowUsers {
 
     private String profile_photo;
 
-    private int approved;
+    private Long approved;
 
     private int profile_type;
 }

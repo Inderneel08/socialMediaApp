@@ -156,6 +156,26 @@ public class UserServices {
         Page<Object[]> rawresults = userRepository.explore(
                 userDetails.getUserId(), pageable);
 
+        rawresults.forEach(result -> {
+            System.out.println(result[0]+ "---->" + result[0].getClass().getName());
+
+            System.out.println(result[1] + "---->" + result[1].getClass().getName());
+
+            System.out.println(result[2] + "---->" + result[2].getClass().getName());
+
+            System.out.println(result[3] + "---->" + result[3].getClass().getName());
+
+            System.out.println(result[13] + "---->" + result[13].getClass().getName());
+
+            System.out.println(result[17] + "---->" + result[17].getClass().getName());
+
+            System.out.println(result[19] + "---->" + result[19].getClass().getName());
+
+            System.out.println(result[20] + "---->" + result[20].getClass().getName());
+
+            System.out.println("-----------------------------");
+        });
+
         return (rawresults.map(result -> {
             ShowUsers users = new ShowUsers();
 
@@ -173,7 +193,7 @@ public class UserServices {
 
             users.setProfile_type((Integer) result[19]);
 
-            users.setApproved((Integer) result[20]);
+            users.setApproved((Long) result[20]);
 
             return (users);
         }));
