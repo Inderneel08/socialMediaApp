@@ -41,4 +41,7 @@ public class StoreMessage {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
+
+    @Column(name = "seen")
+    private int seen;
 }

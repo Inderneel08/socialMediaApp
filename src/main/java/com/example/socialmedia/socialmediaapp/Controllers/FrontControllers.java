@@ -18,6 +18,7 @@ import com.example.socialmedia.socialmediaapp.DAO.MakePost;
 import com.example.socialmedia.socialmediaapp.DAO.SignUpRequest;
 import com.example.socialmedia.socialmediaapp.DAO.Users;
 import com.example.socialmedia.socialmediaapp.Security.EmailCaptureFilter;
+import com.example.socialmedia.socialmediaapp.Service.ChatServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.LogsServiceDetails;
@@ -36,6 +37,9 @@ public class FrontControllers {
 
     @Autowired
     private FriendRequestServiceLayer friendRequestServiceLayer;
+
+    @Autowired
+    private ChatServiceLayer chatServiceLayer;
 
     @GetMapping("/")
     public String hello() {
@@ -106,6 +110,10 @@ public class FrontControllers {
             model.addAttribute("notificationCount", userServices.getNotificationsCount(userDetails.getUserId()));
 
             model.addAttribute("userId", userDetails.getUserId());
+
+            model.addAttribute("countMessages", chatServiceLayer.computeMessageSize(userDetails.getUserId()));
+
+            // System.out.println("Count-> " + chatServiceLayer.computeMessageSize(userDetails.getUserId()));
 
             // model.addAttribute("friendRequests",
             // friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), 0));

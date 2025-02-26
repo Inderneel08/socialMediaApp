@@ -47,7 +47,7 @@ public interface UserRepository extends JpaRepository<Users, BigInteger> {
     // JOIN friends as f on users.id=f.recieverId AND f.senderId = :userid where
     // users.id != :userid ORDER BY users.created_at DESC", nativeQuery = true)
 
-    @Query(value = "SELECT users.*,CASE WHEN friends.current_status=NULL THEN -1 ELSE CASE WHEN friends.current_status=1 THEN 1 ELSE -1 END END as approved  FROM friends RIGHT JOIN users on friends.recieverId=users.id and friends.senderId = :userid where users.id != :userid", nativeQuery = true)
+    @Query(value = "SELECT users.*,CASE WHEN friends.current_status=NULL THEN -1 ELSE CASE WHEN friends.current_status=1 THEN 1 ELSE 0 END END as approved  FROM friends RIGHT JOIN users on friends.recieverId=users.id and friends.senderId = :userid where users.id != :userid", nativeQuery = true)
     Page<Object[]> explore(@Param("userid") BigInteger userid, Pageable pageable);
 
     // @Modifying

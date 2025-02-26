@@ -367,7 +367,7 @@
                         <!--------------- END NOTIFICATION POPUP --------------->
                     </a>
                     <a class="menu-item" id="messages-notifications" onclick="explore(this)">
-                        <span><i class="uil uil-envelope-alt"><small class="notification-count">6</small></i></span>
+                        <span><i class="uil uil-envelope-alt"> <small class="notification-count" th:if="${countMessages!=0}" th:text="${countMessages}"></small></i></span>
                         <h3>Messages</h3>
                     </a>
                     <a class="menu-item" onclick="explore(this)">
