@@ -1119,6 +1119,12 @@
             setInterval(updateText, 2000); // Update the text every 4 seconds
         }
     });
+
+    document.addEventListener("DOMContentLoaded",() =>{
+        // $.ajax({
+        // });
+    });
+
 </script>
 
 <script>
@@ -1157,8 +1163,6 @@
 
     function appendFriends(friends)
     {
-        // console.log(friends);
-
         var feedsContainer = $('#feeds');
 
         friends.forEach(friend => {
