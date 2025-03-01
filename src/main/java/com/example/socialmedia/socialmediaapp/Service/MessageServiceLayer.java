@@ -1,0 +1,46 @@
+package com.example.socialmedia.socialmediaapp.Service;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.socialmedia.socialmediaapp.DAO.MessageSenderDetails;
+import com.example.socialmedia.socialmediaapp.Repositories.MessageRepository;
+
+@Service
+public class MessageServiceLayer {
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    private MessageSenderDetails mapMessageDetails(Object[] result) {
+        MessageSenderDetails messageSenderDetails = new MessageSenderDetails();
+
+        messageSenderDetails.setSenderId(BigInteger.valueOf((Long) result[0]));
+
+        return messageSenderDetails;
+    }
+
+    public int computeMessageSize(BigInteger userid) {
+        List<Object[]> rawresults = messageRepository.findMessagesById(userid);
+
+        List<MessageSenderDetails> messageSenderDetails = new ArrayList<>();
+
+        rawresults.forEach(result -> messageSenderDetails.add(mapMessageDetails(result)));
+
+        return (messageSenderDetails.size());
+    }
+
+    public void fetchMessages(BigInteger userid) {
+        // messages.messageSend,users.id,users.first_name,users.last_name,users.email
+        List<Object[]> messageObject = messageRepository.fetchMessagesViaLogin(userid);
+
+        for (Object[] obj : messageObject) {
+            System.out.println("Message: " + obj[0] + ", ID: " + obj[1] +
+                    ", First Name: " + obj[2] + ", Last Name: " + obj[3]);
+        }
+    }
+}

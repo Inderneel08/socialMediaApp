@@ -22,6 +22,7 @@ import com.example.socialmedia.socialmediaapp.Service.ChatServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.LogsServiceDetails;
+import com.example.socialmedia.socialmediaapp.Service.MessageServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,9 @@ public class FrontControllers {
 
     @Autowired
     private ChatServiceLayer chatServiceLayer;
+
+    @Autowired
+    private MessageServiceLayer messageServiceLayer;
 
     @GetMapping("/")
     public String hello() {
@@ -111,7 +115,7 @@ public class FrontControllers {
 
             model.addAttribute("userId", userDetails.getUserId());
 
-            model.addAttribute("countMessages", chatServiceLayer.computeMessageSize(userDetails.getUserId()));
+            model.addAttribute("countMessages", messageServiceLayer.computeMessageSize(userDetails.getUserId()));
 
             // System.out.println("Count-> " + chatServiceLayer.computeMessageSize(userDetails.getUserId()));
 
