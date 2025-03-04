@@ -1120,17 +1120,25 @@
         }
     });
 
-    document.addEventListener("DOMContentLoaded",() =>{
-        $.ajax({
-            
-        });
-    });
-
 </script>
 
 <script>
 
     let currentPage = 0;
+
+    document.addEventListener("DOMContentLoaded",() =>{
+        $.ajax({
+            url: '/getMessagesViaLogin',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data){
+                console.log(data);
+            },
+            error: function(error){
+                console.error();
+            }
+        });
+    });
 
     let isLoading = false;
 
@@ -1437,9 +1445,9 @@
 
                 var userId = BigInt([[${userId}]]);
 
-                // console.log(userId);
+                // console.log("UserId1 :->" + userId);
 
-                // console.log(messageId);
+                // console.log("RecieverId1 :->" + messageId);
 
                 document.getElementById('chatMessages').innerHTML=event.target.getAttribute('data-name-id');
 
@@ -1452,6 +1460,7 @@
                 // Once clicked now activate websocket connection.
 
                 disconnect();
+
                 startConnection(userId,messageId);
 
                 $('#chatbox').show();
@@ -1513,6 +1522,8 @@
 
     $('#closeChat').on('click',function(){
         $('#chatbox').hide();
+
+        disconnect();
     });
 
 </script>
@@ -1835,6 +1846,19 @@
         brokerURL: 'ws://localhost:8080/websocket'
     });
 
+    function formatTimestamp(isoTimestamp) {
+        const date = new Date(isoTimestamp);
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
     function startConnection(senderId,recieverId)
     {
         var chatRoomId = (senderId < recieverId) ? senderId+'_'+recieverId : recieverId+'_'+senderId;
@@ -1849,18 +1873,23 @@
             console.log('Connected: ' + frame);
 
             stompClient.subscribe(chatEndpoint, (message) => {
-                // console.log(message);
+
+                var parsedMessage = JSON.parse(message.body || new TextDecoder().decode(message._binaryBody));
+
+                console.log(parsedMessage);
+
+                // console.log(formatTimestamp(parsedMessage.createdTimestamp));
 
                 var decodedMessage = JSON.parse(new TextDecoder().decode(message._binaryBody));
 
-                displayMessage(decodedMessage.message);
+                displayMessage(decodedMessage.message,parsedMessage.id,parsedMessage.recieverId);
             });
         };
 
         stompClient.activate();
     }
 
-    function displayMessage(message)
+    function displayMessage(message,id,recieverId)
     {
         let chatboxMessages = document.getElementById("chatbox-messages");
 
@@ -1873,6 +1902,28 @@
         chatboxMessages.appendChild(messageElement);
 
         chatboxMessages.scrollTop = chatboxMessages.scrollHeight;
+
+        var userId = BigInt([[${userId}]]);
+
+        // console.log("SenderId ->"+ senderId);
+
+        // console.log("RecieverId ->"+ recieverId);
+
+        // console.log("Message ->"+ message);
+
+        if(userId == BigInt(recieverId)){
+            $.ajax({
+                url:'/updateMessageSeen',
+                method:'POST',
+                data: { id: id},
+                success: function(data){
+                    // console.log(data);
+                },
+                error: function(error){
+                    console.error("Failed :", error);
+                }
+            });
+        }
     }
 
     function disconnect()

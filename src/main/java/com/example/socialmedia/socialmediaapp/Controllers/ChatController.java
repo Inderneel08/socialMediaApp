@@ -1,7 +1,5 @@
 package com.example.socialmedia.socialmediaapp.Controllers;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,8 +23,9 @@ public class ChatController {
     @MessageMapping("/sendMessage/{chatRoomId}")
     public void sendMessage(@DestinationVariable String chatRoomId, ChatMessage chatMessage) {
 
-        chatServiceLayer.createChatMessage(chatMessage.getSenderId(), chatMessage.getRecieverId(),
-                chatMessage.getMessage());
+        chatMessage.setId(
+                chatServiceLayer.createChatMessage(chatMessage.getSenderId(), chatMessage.getRecieverId(),
+                        chatMessage.getMessage()));
 
         messagingTemplate.convertAndSend("/private/" + chatRoomId, chatMessage);
     }

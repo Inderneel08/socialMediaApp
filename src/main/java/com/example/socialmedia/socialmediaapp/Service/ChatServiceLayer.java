@@ -1,6 +1,8 @@
 package com.example.socialmedia.socialmediaapp.Service;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.StoreMessage;
@@ -12,7 +14,7 @@ public class ChatServiceLayer {
     @Autowired
     private MessageRepository messageRepository;
 
-    public void createChatMessage(String senderId, String recieverId, String message) {
+    public BigInteger createChatMessage(String senderId, String recieverId, String message) {
         StoreMessage storeMessage = new StoreMessage();
 
         storeMessage.setSenderId(BigInteger.valueOf(Long.valueOf(senderId)));
@@ -21,7 +23,9 @@ public class ChatServiceLayer {
 
         storeMessage.setMessageSend(message);
 
-        messageRepository.save(storeMessage);
+        StoreMessage savedMessage = messageRepository.save(storeMessage);
+
+        return (savedMessage.getId());
     }
 
 }
