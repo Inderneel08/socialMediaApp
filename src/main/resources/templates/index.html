@@ -1461,7 +1461,19 @@
 
                 disconnect();
 
-                startConnection(userId,messageId);
+                $.ajax({
+                    url:'/establishConnection',
+                    method:'POST',
+                    data: {senderId: userId,recieverId: messageId},
+                    success: function(data, textStatus, jqXHR) {
+                        if(jqXHR.status==200){
+                            startConnection(userId,messageId);
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", jqXHR.status, errorThrown);
+                    }
+                });
 
                 $('#chatbox').show();
             });
@@ -1868,6 +1880,11 @@
         recieverIdGlobal=recieverId;
 
         var chatEndpoint = `/private/${chatRoomId}`;
+
+        // console.log("SenderId -> "+senderId);
+
+        // console.log("RecieverId -> "+recieverId);
+
 
         stompClient.onConnect = (frame) => {
             console.log('Connected: ' + frame);

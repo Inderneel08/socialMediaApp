@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
+import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.MessageServiceLayer;
 
 @RestController
@@ -20,6 +21,9 @@ public class MessageController {
 
     @Autowired
     private MessageServiceLayer messageServiceLayer;
+
+    @Autowired
+    private FriendRequestServiceLayer friendRequestServiceLayer;
 
     @GetMapping("/getMessagesViaLogin")
     public ResponseEntity<?> fetchMessages() {
@@ -31,16 +35,25 @@ public class MessageController {
 
         // messageServiceLayer.fetchMessages(userDetails.getUserId())
 
-        return(ResponseEntity.ok().build());
+        return (ResponseEntity.ok().build());
     }
 
+    @PostMapping("/establishConnection")
+    public ResponseEntity<?> correctConnection(@RequestParam(value = "senderId") BigInteger senderId,
+            @RequestParam(value = "recieverId") BigInteger recieverId) {
+        if (friendRequestServiceLayer.checkFollow(senderId, recieverId) && friendRequestServiceLayer.checkFollow(
+                recieverId, senderId)) {
+            return ResponseEntity.status(200).build();
+        }
+
+        return (ResponseEntity.badRequest().build());
+    }
 
     @PostMapping("/updateMessageSeen")
-    public ResponseEntity<?> updateMessageSeen(@RequestParam(value = "id") BigInteger id)
-    {
+    public ResponseEntity<?> updateMessageSeen(@RequestParam(value = "id") BigInteger id) {
         messageServiceLayer.updateMessageSeenStatus(id);
 
-        return(ResponseEntity.ok().build());
+        return (ResponseEntity.ok().build());
     }
 
 }

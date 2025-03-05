@@ -29,4 +29,8 @@ public interface FriendRepository extends JpaRepository<Friends, BigInteger> {
         @Modifying
         @Query(value = "UPDATE friends set friends.current_status=1 where friends.senderId = :senderId and friends.recieverId = :receiverId", nativeQuery = true)
         void addFriendship(@Param("senderId") BigInteger senderId, @Param("receiverId") BigInteger receiverId);
+
+        @Query(value = "SELECT * FROM friends where friends.senderId = :senderId and friends.recieverId = :receiverId", nativeQuery = true)
+        Friends getFriendsRequestStatus(@Param("senderId") BigInteger senderId,
+                        @Param("receiverId") BigInteger receiverId);
 }

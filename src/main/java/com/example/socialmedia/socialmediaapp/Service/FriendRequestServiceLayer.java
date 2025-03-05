@@ -101,4 +101,19 @@ public class FriendRequestServiceLayer {
         }
     }
 
+    public boolean checkFollow(BigInteger senderId,BigInteger recieverId)
+    {
+        Friends friends = friendRepository.getFriendsRequestStatus(senderId, recieverId);
+
+        if(friends==null){
+            return(false);
+        }
+
+        if(friends.getCurrent_status()==0){
+            return(false);
+        }
+
+        return(true);
+    }
+
 }
