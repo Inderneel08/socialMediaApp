@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.socialmedia.socialmediaapp.Service.CustomUserDetails;
 import com.example.socialmedia.socialmediaapp.Service.FriendRequestServiceLayer;
 import com.example.socialmedia.socialmediaapp.Service.MessageServiceLayer;
+import com.example.socialmedia.socialmediaapp.Service.UserServices;
 
 @RestController
 public class MessageController {
 
     @Autowired
     private MessageServiceLayer messageServiceLayer;
+
+    @Autowired
+    private UserServices userServices;
 
     @Autowired
     private FriendRequestServiceLayer friendRequestServiceLayer;
@@ -41,12 +45,12 @@ public class MessageController {
     @PostMapping("/establishConnection")
     public ResponseEntity<?> correctConnection(@RequestParam(value = "senderId") BigInteger senderId,
             @RequestParam(value = "recieverId") BigInteger recieverId) {
-        if (friendRequestServiceLayer.checkFollow(senderId, recieverId) && friendRequestServiceLayer.checkFollow(
-                recieverId, senderId)) {
+
+        if(friendRequestServiceLayer.checkConnection(senderId, recieverId)){
             return ResponseEntity.status(200).build();
         }
 
-        return (ResponseEntity.badRequest().build());
+        return (ResponseEntity.badRequest().body("To message this person they need to follow you first."));
     }
 
     @PostMapping("/updateMessageSeen")

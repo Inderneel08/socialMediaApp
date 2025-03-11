@@ -14,6 +14,7 @@ import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepositor
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,9 @@ public class FriendRequestServiceLayer {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private UserServices userServices;
 
     private MyFriends mapToMyFriends(Object[] result) {
         MyFriends friend = new MyFriends();
@@ -101,19 +105,40 @@ public class FriendRequestServiceLayer {
         }
     }
 
-    public boolean checkFollow(BigInteger senderId,BigInteger recieverId)
-    {
+    public boolean checkConnection(BigInteger senderId, BigInteger recieverId) {
+        boolean doYouFollow = checkFollow(senderId, recieverId);
+
+        boolean doTheyFollowYou = checkFollow(recieverId, senderId);
+
+        int profileTypeReciever = userServices.typeOfProfile(recieverId);
+
+        if (profileTypeReciever == 0) {
+            return true;
+        } else {
+            if ((doYouFollow && doTheyFollowYou)) {
+                return true;
+            } else {
+                if (doTheyFollowYou) {
+                    return true;
+                }
+            }
+        }
+
+        return(false);
+    }
+
+    public boolean checkFollow(BigInteger senderId, BigInteger recieverId) {
         Friends friends = friendRepository.getFriendsRequestStatus(senderId, recieverId);
 
-        if(friends==null){
-            return(false);
+        if (friends == null) {
+            return (false);
         }
 
-        if(friends.getCurrent_status()==0){
-            return(false);
+        if (friends.getCurrent_status() == 0) {
+            return (false);
         }
 
-        return(true);
+        return (true);
     }
 
 }

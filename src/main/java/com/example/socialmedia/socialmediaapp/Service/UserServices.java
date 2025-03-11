@@ -204,4 +204,11 @@ public class UserServices {
         return (notificationRepository.getCountNotifications(userid));
     }
 
+    public int typeOfProfile(BigInteger userid)
+    {
+        Users users = userRepository.findByUserId(userid);
+
+        return(users.getProfile_type());
+    }
+
 }

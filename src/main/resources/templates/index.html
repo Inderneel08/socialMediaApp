@@ -899,9 +899,13 @@
 
                         <div id="chatbox-messages" class="chat-messages"></div>
 
-                        <div class="input-area">
+                        <div class="input-area" id="ourTextArea">
                             <input type="text" id="messageInput" placeholder="Type a message...">
                             <button id="messageSendButton">Send</button>
+                        </div>
+
+                        <div class="showTextAreaHidden" style="display: none;">
+                            <p id="textShowMessage"></p>
                         </div>
                     </div>
 
@@ -1468,10 +1472,20 @@
                     success: function(data, textStatus, jqXHR) {
                         if(jqXHR.status==200){
                             startConnection(userId,messageId);
+
+                            $('#ourTextArea').show();
+
+                            document.getElementById('textShowMessage').innerHTML='';
+
+                            $('.showTextAreaHidden').hide();
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("Error:", jqXHR.status, errorThrown);
+                        $('#ourTextArea').hide();
+
+                        document.getElementById('textShowMessage').innerHTML=jqXHR.responseText;
+
+                        $('.showTextAreaHidden').show();
                     }
                 });
 
