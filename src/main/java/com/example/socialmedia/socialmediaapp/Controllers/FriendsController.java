@@ -53,13 +53,14 @@ public class FriendsController {
     @GetMapping("/fetchMessages")
     public Page<MyFriends> fetchMessages(@RequestParam(value = "page") int page,
             @RequestParam(value = "message") String message) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        System.out.println(userDetails.getUserId());
+        // System.out.println(userDetails.getUserId());
+        // userDetails.getUserId(),
 
-        return (friendRequestServiceLayer.getAllFriends(userDetails.getUserId(), page, message));
+        return (friendRequestServiceLayer.getAllFriends(page, message));
     }
 
     @PostMapping("/sendFriendRequest")

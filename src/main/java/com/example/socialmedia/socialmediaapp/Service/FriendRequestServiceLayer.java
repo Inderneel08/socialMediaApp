@@ -44,24 +44,20 @@ public class FriendRequestServiceLayer {
         return friend;
     }
 
-    public Page<MyFriends> getAllFriends(BigInteger userid, int page, String message) {
+    public Page<MyFriends> getAllFriends(int page, String message) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
         System.out.println("Message ->" + message);
 
-        Page<Object[]> rawresults = friendRepository.getWhoIFollow(userid, pageable, message);
-
-        Page<Object[]> rawresults2 = friendRepository.getWhoFollowMe(userid, pageable, message);
+        Page<Object[]> finalResults = friendRepository.getUsersList(pageable, message);
 
         List<MyFriends> friends = new ArrayList<>();
 
-        rawresults.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
+        finalResults.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
 
-        rawresults2.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
-
-        long totalElements = rawresults.getTotalElements() + rawresults2.getTotalElements();
+        long totalElements = finalResults.getTotalElements();
 
         return (new PageImpl<>(friends, pageable, totalElements));
     }
@@ -124,7 +120,7 @@ public class FriendRequestServiceLayer {
             }
         }
 
-        return(false);
+        return (false);
     }
 
     public boolean checkFollow(BigInteger senderId, BigInteger recieverId) {
