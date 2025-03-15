@@ -36,6 +36,11 @@ public class MessageServiceLayer {
         return (messageSenderDetails.size());
     }
 
+    @Transactional
+    public void updateBulkSeenStatusOnRecieverId(BigInteger userid){
+        messageRepository.updateBulkSeenStatusOnRecieverId(userid);
+    }
+
     public void fetchMessages(BigInteger userid) {
         // messages.messageSend,users.id,users.first_name,users.last_name
         List<Object[]> messageObject = messageRepository.fetchMessagesViaLogin(userid);

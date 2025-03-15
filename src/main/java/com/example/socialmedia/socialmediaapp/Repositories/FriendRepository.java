@@ -11,9 +11,32 @@ import org.springframework.data.domain.Pageable;
 
 public interface FriendRepository extends JpaRepository<Friends, BigInteger> {
 
-        @Query(value = "SELECT u.id,u.first_name,u.last_name,u.profile_photo FROM users as u where (u.first_name LIKE CONCAT('%', :message, '%') or u.last_name LIKE CONCAT('%', :message, '%') or CONCAT(u.first_name,' ',u.last_name) LIKE CONCAT('%', :message, '%') ) ORDER BY u.created_at DESC", nativeQuery = true)
-        Page<Object[]> getUsersList(Pageable pageable,
+        @Query(value = "SELECT u.id,u.first_name,u.last_name,u.profile_photo FROM users as u where (u.first_name LIKE CONCAT('%', :message, '%') or u.last_name LIKE CONCAT('%', :message, '%') or CONCAT(u.first_name,' ',u.last_name) LIKE CONCAT('%', :message, '%') ) and u.id!=:userid ORDER BY u.created_at DESC", nativeQuery = true)
+        Page<Object[]> getUsersList(@Param("userid") BigInteger userid, Pageable pageable,
                         @Param("message") String message);
+
+        @Query(value = "select allRecords.id,allRecords.first_name,allRecords.last_name,allRecords.profile_photo,allRecords.messageSend,allRecords.typeofMessage,allRecords.seen from(\n"
+                        + //
+                        "select finalRecords.*,messages.messageSend,messages.seen,1 as typeofMessage from(\n" + //
+                        "select records.*,max(messages.id) as messageId from (\n" + //
+                        "select users.* from messages inner join users on users.id=messages.senderId where messages.recieverId=1 group by users.id\n"
+                        + //
+                        ") as records inner join messages on messages.senderId=records.id where messages.recieverId=1 group by records.id\n"
+                        + //
+                        ") as finalRecords inner join messages on messages.id=finalRecords.messageId\n" + //
+                        "\n" + //
+                        "union all\n" + //
+                        "\n" + //
+                        "\n" + //
+                        "select finalRecords.*,messages.messageSend,messages.seen,0 as typeofMessage from (\n" + //
+                        "select records.*,max(messages.id) as messageId from (\n" + //
+                        "select users.* from messages inner join users on users.id=messages.recieverId where messages.senderId=1 group by users.id\n"
+                        + //
+                        ") as records inner join messages on messages.recieverId=records.id where messages.senderId=1 group by records.id\n"
+                        + //
+                        ") as finalRecords inner join messages on finalRecords.messageId=messages.id\n" + //
+                        ") as allRecords", nativeQuery = true)
+        Page<Object[]> getMyMessages(Pageable pageable);
 
         @Query(value = "SELECT * FROM friends where friends.senderId = :senderId and friends.recieverId = :receiverId", nativeQuery = true)
         Friends getFriendsDetails(@Param("senderId") BigInteger senderId, @Param("receiverId") BigInteger receiverId);

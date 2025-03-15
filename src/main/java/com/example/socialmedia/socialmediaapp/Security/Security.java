@@ -41,7 +41,8 @@ public class Security {
                                                 "/perform-like-unlike", "/sendFriendRequest", "/delete-notification",
                                                 "/accept-friend-request", "/fetchMessages", "/private/**",
                                                 "/app/sendMessage/**",
-                                                "/websocket/**", "/getMessagesViaLogin", "/updateMessageSeen","/establishConnection")
+                                                "/websocket/**", "/getMessagesViaLogin", "/updateMessageSeen",
+                                                "/establishConnection", "/bulk-update-reciever", "/getChatMessages")
                                 .hasAuthority("ROLE_USER")
                                 .anyRequest().authenticated()
                                 .and().formLogin().loginPage("/login")

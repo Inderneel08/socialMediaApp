@@ -46,7 +46,7 @@ public class MessageController {
     public ResponseEntity<?> correctConnection(@RequestParam(value = "senderId") BigInteger senderId,
             @RequestParam(value = "recieverId") BigInteger recieverId) {
 
-        if(friendRequestServiceLayer.checkConnection(senderId, recieverId)){
+        if (friendRequestServiceLayer.checkConnection(senderId, recieverId)) {
             return ResponseEntity.status(200).build();
         }
 
@@ -56,6 +56,19 @@ public class MessageController {
     @PostMapping("/updateMessageSeen")
     public ResponseEntity<?> updateMessageSeen(@RequestParam(value = "id") BigInteger id) {
         messageServiceLayer.updateMessageSeenStatus(id);
+
+        return (ResponseEntity.ok().build());
+    }
+
+    @PostMapping("/bulk-update-reciever")
+    public ResponseEntity<?> updateBulkMessageSeenOnReciever() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object principal = authentication.getPrincipal();
+
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
+
+        messageServiceLayer.updateBulkSeenStatusOnRecieverId(userDetails.getUserId());
 
         return (ResponseEntity.ok().build());
     }

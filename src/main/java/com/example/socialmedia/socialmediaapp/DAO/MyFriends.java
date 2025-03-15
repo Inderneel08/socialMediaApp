@@ -16,4 +16,10 @@ public class MyFriends {
     private String last_name;
 
     private String profile_photo;
+
+    private String messageSend;
+
+    private Long typeofMessage;
+
+    private int seen;
 }

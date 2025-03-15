@@ -1423,7 +1423,7 @@
 
     let scrollPage=0;
 
-    function appendContacts(messages)
+    function appendContacts(messages,searching)
     {
         let messagesContainer = $('.messages-container');
 
@@ -1437,9 +1437,11 @@
                         <div class="message-body" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                             <h5 data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">${msg.first_name} ${msg.last_name}</h5>
                             <p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"></p>
+                            ${searching==true ? ``:`${msg.messageSend}`}
                         </div>
                     </div>
                 `;
+
                 messagesContainer.append(messageHtml);
             });
 
@@ -1498,24 +1500,46 @@
     {
         var message = $('#message-search').val();
 
-        $.ajax({
-            url: '/fetchMessages',
-            method: 'GET',
-            dataType: 'json',
-            data: {page: scrollPage,message: message},
-            success: function (data) {
+        if(message!=''){
+            $.ajax({
+                url: '/fetchMessages',
+                method: 'GET',
+                dataType: 'json',
+                data: {page: scrollPage,message: message},
+                success: function (data) {
 
-                if(data && data.size>0){
-                    appendContacts(data.content);
+                    if(data && data.size>0){
+                        appendContacts(data.content,true);
+                    }
+                    else{
+                        console.log("No more posts to load...");
+                    }
+                },
+                error: function (error) {
+                    console.error("Failed to fetch posts:", error);
                 }
-                else{
-                    console.log("No more posts to load...");
+            });
+        }
+        else if(message==''){
+            $.ajax({
+                url: '/getChatMessages',
+                method: 'GET',
+                dataType: 'json',
+                data: {page: scrollPage},
+                success: function (data) {
+
+                    if(data && data.size>0){
+                        appendContacts(data.content,false);
+                    }
+                    else{
+                        console.log("No more posts to load...");
+                    }
+                },
+                error: function (error) {
+                    console.error("Failed to fetch posts:", error);
                 }
-            },
-            error: function (error) {
-                console.error("Failed to fetch posts:", error);
-            }
-        });
+            });
+        }
     }
 
 
@@ -1552,6 +1576,18 @@
         disconnect();
     });
 
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.messages-container').empty();
+
+        scrollPage=0;
+
+        $('.messages-container').show();
+
+        fetchMessages();
+    });
 </script>
 
 <script>
@@ -1982,6 +2018,19 @@
         stompClient.publish({
             destination: destinationUrl,
             body: JSON.stringify({ message: message, senderId: senderIdGlobal.toString(), recieverId: recieverIdGlobal.toString() })
+        });
+    });
+
+    $('#messages-notifications').on('click',function(){
+        $.ajax({
+            url:'/bulk-update-reciever',
+            method:'POST',
+            success: function(data){
+                console.log(data);
+            },
+            error: function(error){
+                console.error("Failed :", error);
+            }
         });
     });
 

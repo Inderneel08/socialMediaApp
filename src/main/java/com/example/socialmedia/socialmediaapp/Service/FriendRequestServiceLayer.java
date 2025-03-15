@@ -3,8 +3,6 @@ package com.example.socialmedia.socialmediaapp.Service;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.socialmedia.socialmediaapp.DAO.Friends;
@@ -14,7 +12,6 @@ import com.example.socialmedia.socialmediaapp.Repositories.NotificationRepositor
 import com.example.socialmedia.socialmediaapp.Repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import jakarta.transaction.Transactional;
@@ -41,21 +38,61 @@ public class FriendRequestServiceLayer {
         friend.setFirst_name((String) result[1]);
         friend.setLast_name((String) result[2]);
         friend.setProfile_photo((String) result[3]);
+
         return friend;
     }
 
-    public Page<MyFriends> getAllFriends(int page, String message) {
+    private MyFriends mapToMyMessages(Object[] result, List<MyFriends> friends) {
+        MyFriends friend = new MyFriends();
+
+        friend.setId(BigInteger.valueOf((Long) result[0]));
+        friend.setFirst_name((String) result[1]);
+        friend.setLast_name((String) result[2]);
+        friend.setProfile_photo((String) result[3]);
+        friend.setMessageSend((String) result[4]);
+        friend.setTypeofMessage((Long) result[5]);
+        friend.setSeen((int) result[6]);
+
+        for (MyFriends myFriends : friends) {
+            if (myFriends.getId() == friend.getId()) {
+                return null;
+            }
+        }
+
+        return (friend);
+    }
+
+    public Page<MyFriends> getAllFriends(BigInteger userid, int page, String message) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        System.out.println("Message ->" + message);
-
-        Page<Object[]> finalResults = friendRepository.getUsersList(pageable, message);
+        Page<Object[]> finalResults = friendRepository.getUsersList(userid, pageable, message);
 
         List<MyFriends> friends = new ArrayList<>();
 
         finalResults.getContent().forEach(result -> friends.add(mapToMyFriends(result)));
+
+        long totalElements = finalResults.getTotalElements();
+
+        return (new PageImpl<>(friends, pageable, totalElements));
+    }
+
+    public Page<MyFriends> getMessages(int page) {
+        int size = 10;
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Object[]> finalResults = friendRepository.getMyMessages(pageable);
+
+        List<MyFriends> friends = new ArrayList<>();
+
+        finalResults.getContent().forEach(result -> {
+            MyFriends friend = mapToMyMessages(result, friends);
+            if (friend != null) {
+                friends.add(friend);
+            }
+        });
 
         long totalElements = finalResults.getTotalElements();
 
