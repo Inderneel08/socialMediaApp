@@ -62,7 +62,11 @@ public class FriendsController {
 
     @GetMapping("/getChatMessages")
     public Page<MyFriends> getChatMessages(@RequestParam(value = "page") int page) {
-        return (friendRequestServiceLayer.getMessages(page));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        return (friendRequestServiceLayer.getMessages(userDetails.getUserId(),page));
     }
 
     @PostMapping("/sendFriendRequest")

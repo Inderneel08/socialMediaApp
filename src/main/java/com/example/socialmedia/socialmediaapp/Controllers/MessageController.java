@@ -73,4 +73,16 @@ public class MessageController {
         return (ResponseEntity.ok().build());
     }
 
+    @GetMapping("/getCountMessagesRecieved")
+    public ResponseEntity<?> getCountMessagesRecieved(@RequestParam(value = "senderId") BigInteger senderId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Object principal = authentication.getPrincipal();
+
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
+
+        return (ResponseEntity.ok().body(
+                messageServiceLayer.computeMessagesRecieved(senderId, userDetails.getUserId())));
+    }
+
 }

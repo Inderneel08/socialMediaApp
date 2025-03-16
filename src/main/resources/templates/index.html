@@ -206,6 +206,22 @@
     cursor: pointer;
 }
 
+#message-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: blue;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+}
+
 </style>
 
 <body>
@@ -1429,20 +1445,48 @@
 
         if(messages.length!==0){
             messages.forEach(msg => {
+
                 let messageHtml = `
                     <div class="message" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                         <div class="profile-photo" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                             <img src="${msg.profile_photo}" alt="profile-${msg.first_name} ${msg.last_name}" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
+                            ${searching==true?
+                                (``):(`
+                                    <span id="message-count" class="message-count-${msg.id}"></span>
+                                `)}
                         </div>
                         <div class="message-body" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                             <h5 data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">${msg.first_name} ${msg.last_name}</h5>
                             <p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"></p>
-                            ${searching==true ? ``:`${msg.messageSend}`}
+                            ${searching==true ?
+                                ``:
+                                `<p class="text-bold"> ${msg.messageSend} </p>`
+                            }
                         </div>
                     </div>
                 `;
 
                 messagesContainer.append(messageHtml);
+
+                if(msg.typeofMessage==1){
+                    if(msg.seen==0){
+                        var senderId = msg.id;
+                        $.ajax({
+                            url:'/getCountMessagesRecieved',
+                            method: 'GET',
+                            dataType: 'json',
+                            data: {senderId: senderId},
+                            success: function(data){
+                                if(data!=0){
+                                    $(`.message-count-${senderId}`).text(data);
+                                }
+                            },
+                            error:function(error){
+                                console.error();
+                            }
+                        });
+                    }
+                }
             });
 
             $('.message').on('click',function(event){

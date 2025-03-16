@@ -63,4 +63,9 @@ public class MessageServiceLayer {
         messageRepository.updateSeenStatus(id);
     }
 
+    public int computeMessagesRecieved(BigInteger senderId,BigInteger recieverId)
+    {
+        return(messageRepository.countMessages(senderId, recieverId));
+    }
+
 }

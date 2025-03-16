@@ -45,13 +45,21 @@ public class FriendRequestServiceLayer {
     private MyFriends mapToMyMessages(Object[] result, List<MyFriends> friends) {
         MyFriends friend = new MyFriends();
 
+        System.out.println("Hello1");
         friend.setId(BigInteger.valueOf((Long) result[0]));
+        System.out.println("Hello2");
         friend.setFirst_name((String) result[1]);
+        System.out.println("Hello3");
         friend.setLast_name((String) result[2]);
+        System.out.println("Hello3");
         friend.setProfile_photo((String) result[3]);
+        System.out.println("Hello4");
         friend.setMessageSend((String) result[4]);
+        System.out.println("Hello5");
         friend.setTypeofMessage((Long) result[5]);
+        System.out.println("Hello6");
         friend.setSeen((int) result[6]);
+        System.out.println("Hello7");
 
         for (MyFriends myFriends : friends) {
             if (myFriends.getId() == friend.getId()) {
@@ -78,12 +86,12 @@ public class FriendRequestServiceLayer {
         return (new PageImpl<>(friends, pageable, totalElements));
     }
 
-    public Page<MyFriends> getMessages(int page) {
+    public Page<MyFriends> getMessages(BigInteger userid,int page) {
         int size = 10;
 
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Object[]> finalResults = friendRepository.getMyMessages(pageable);
+        Page<Object[]> finalResults = friendRepository.getMyMessages(userid,pageable);
 
         List<MyFriends> friends = new ArrayList<>();
 

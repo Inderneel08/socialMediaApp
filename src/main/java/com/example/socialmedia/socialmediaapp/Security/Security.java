@@ -42,7 +42,7 @@ public class Security {
                                                 "/accept-friend-request", "/fetchMessages", "/private/**",
                                                 "/app/sendMessage/**",
                                                 "/websocket/**", "/getMessagesViaLogin", "/updateMessageSeen",
-                                                "/establishConnection", "/bulk-update-reciever", "/getChatMessages")
+                                                "/establishConnection", "/bulk-update-reciever", "/getChatMessages","/getCountMessagesRecieved")
                                 .hasAuthority("ROLE_USER")
                                 .anyRequest().authenticated()
                                 .and().formLogin().loginPage("/login")
