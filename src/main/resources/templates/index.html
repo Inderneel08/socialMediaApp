@@ -1452,7 +1452,7 @@
                             <img src="${msg.profile_photo}" alt="profile-${msg.first_name} ${msg.last_name}" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
                             ${searching==true?
                                 (``):(`
-                                    <span id="message-count" class="message-count-${msg.id}"></span>
+                                    <span id="message-count" class="message-count-${msg.id}" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"></span>
                                 `)}
                         </div>
                         <div class="message-body" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}">
@@ -1460,7 +1460,7 @@
                             <p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"></p>
                             ${searching==true ?
                                 ``:
-                                `<p class="text-bold"> ${msg.messageSend} </p>`
+                                `<p class="text-bold" data-message-id="${msg.id}" data-name-id="${msg.first_name} ${msg.last_name}" data-src-id="${msg.profile_photo}"> ${msg.messageSend} </p>`
                             }
                         </div>
                     </div>
@@ -1490,6 +1490,8 @@
             });
 
             $('.message').on('click',function(event){
+
+                // if($())
 
                 var messageId = BigInt(event.target.getAttribute('data-message-id'));
 
@@ -2065,18 +2067,18 @@
         });
     });
 
-    $('#messages-notifications').on('click',function(){
-        $.ajax({
-            url:'/bulk-update-reciever',
-            method:'POST',
-            success: function(data){
-                console.log(data);
-            },
-            error: function(error){
-                console.error("Failed :", error);
-            }
-        });
-    });
+    // $('#').on('click',function(){
+    //     $.ajax({
+    //         url:'/bulk-update-reciever',
+    //         method:'POST',
+    //         success: function(data){
+    //             console.log(data);
+    //         },
+    //         error: function(error){
+    //             console.error("Failed :", error);
+    //         }
+    //     });
+    // });
 
 </script>
 

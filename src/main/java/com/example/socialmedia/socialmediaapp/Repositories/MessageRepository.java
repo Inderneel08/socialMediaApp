@@ -23,9 +23,9 @@ public interface MessageRepository extends JpaRepository<StoreMessage, BigIntege
     public void updateSeenStatus(@Param("id") BigInteger id);
 
     @Modifying
-    @Query(value = "UPDATE messages set messages.seen = 1 where messages.recieverId = :id", nativeQuery = true)
+    @Query(value = "UPDATE messages set messages.seen = 1 where messages.recieverId = :id and messages.seen=0", nativeQuery = true)
     public void updateBulkSeenStatusOnRecieverId(@Param("id") BigInteger id);
 
-    @Query(value = "SELECT COUNT(*) from messages where messages.senderId = :senderId and messages.recieverId = :receiverId", nativeQuery = true)
-    public int countMessages(@Param("senderId") BigInteger senderId,@Param("receiverId") BigInteger receiverId);
+    @Query(value = "SELECT COUNT(*) from messages where messages.senderId = :senderId and messages.recieverId = :receiverId and messages.seen=0", nativeQuery = true)
+    public int countMessages(@Param("senderId") BigInteger senderId, @Param("receiverId") BigInteger receiverId);
 }

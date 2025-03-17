@@ -93,6 +93,10 @@ public class FriendRequestServiceLayer {
 
         Page<Object[]> finalResults = friendRepository.getMyMessages(userid,pageable);
 
+        if (finalResults.isEmpty()) {
+            return Page.empty();
+        }
+
         List<MyFriends> friends = new ArrayList<>();
 
         finalResults.getContent().forEach(result -> {
